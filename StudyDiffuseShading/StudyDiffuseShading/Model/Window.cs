@@ -7,27 +7,25 @@ namespace StudyDiffuseShading.Model {
     public class Window {
         private int width;
         private int height;
-        private int size;
         private double scale;
+        private Vector3D eye;
 
 
-        public Window(int width, int height, double scale) {
+        public Window(int width, int height, double scale, Vector3D eye) {
             this.scale = scale;
             this.width = width;
             this.height = height;
-            this.size = width * height;
+            this.eye = eye;
         }
 
 
-        public Vector3D getRay(int index) {
-            int row = index / width;
-            int col = index % width;
-            return new Vector3D();
-        }
+        public Ray getRay(int row, int column) {
+            var screenX = scale * (column - width * 0.5 + 0.5);
+            var screenY = scale * ((height - row) - height * 0.5 + 0.5);
 
-
-        public int Size {
-            get { return size; }
+            Ray ray = new Ray(eye, new Vector3D(screenX, screenY, 0) - eye);
+            ray.normalize();
+            return ray;
         }
     }
 }
