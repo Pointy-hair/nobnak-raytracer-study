@@ -8,17 +8,24 @@ using System.Windows.Media;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
-        private Construction primitives;
-        private Screen screen;
         private int width = 400;
         private int height = 300;
 
+        private Screen screen;
+        private Window window;
+        private Tracer tracer;
+
 
         public Engine() {
-            this.primitives = new Construction();
-            this.screen = new Screen(width, height);
+            Vector3D eye = new Vector3D(0, 0, 100);
+            double scale = 1.0;
 
+            var primitives = new Construction();
             primitives.add(new Triangle(new Vector3D(0, 20, 10), new Vector3D(-20, -20, 10), new Vector3D(20, -20, 10)));
+
+            this.screen = new Screen(width, height);
+            this.window = new Window(width, height, scale, eye);
+            this.tracer = new Tracer(primitives);
         }
 
 
@@ -27,21 +34,10 @@ namespace StudyDiffuseShading.Model {
         }
 
         public void render() {
-            Vector3D eye = new Vector3D(0, 0, 100);
-            double scale = 1.0;
-
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {
-                    var screenX = scale * (column - width * 0.5 + 0.5);
-                    var screenY = scale * ((height - row) - height * 0.5 + 0.5);
-
-                    Ray ray = new Ray(eye, new Vector3D(screenX, screenY, 0) - eye);
-                    ray.normalize();
-
-                    double nearest;
-                    Triangle target;
-                    screen.setPixel(row, column, 
-                        primitives.findNearest(ray, double.MaxValue, out nearest, out target) ? Colors.White : Colors.Black);
+                    Ray ray = window.getRay(row, column);
+                    screen.setPixel(row, column, tracer.traceRay(ray));
                 }
             }
         }

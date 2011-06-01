@@ -23,13 +23,8 @@ namespace StudyDiffuseShading.Model.Primitive {
         }
 
 
-        public bool intersect(Ray ray, ref double distance) {
-            IntersectResult result;
-            if (!intersectAlgorithm.intersect(ray, this, out result))
-                return false;
-
-            distance = result.t;
-            return true;
+        public bool intersect(Ray ray, out IntersectResult result) {
+            return intersectAlgorithm.intersect(ray, this, out result);
         }        
     }
 }

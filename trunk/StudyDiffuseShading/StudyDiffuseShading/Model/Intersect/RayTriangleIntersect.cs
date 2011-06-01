@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Util;
 using StudyDiffuseShading.Model.Primitive;
+using System.Windows.Media;
 
 namespace StudyDiffuseShading.Model.Intersect {
     public class RayTriangleIntersect {
@@ -35,21 +36,9 @@ namespace StudyDiffuseShading.Model.Intersect {
 
             var tNumerator = Vector3D.DotProduct(q, e2);
             var invDet = 1 / det;
-            result = new IntersectResult(tNumerator * invDet, uNumerator * invDet, vNumerator * invDet);
+            result = new IntersectResult(tNumerator * invDet, uNumerator * invDet, vNumerator * invDet, triangle);
 
             return true;
-        }
-
-    }
-    public struct IntersectResult {
-        public readonly double t;
-        public readonly double u;
-        public readonly double v;
-
-        public IntersectResult(double t, double u, double v) {
-            this.t = t;
-            this.u = u;
-            this.v = v;
         }
     }
 }

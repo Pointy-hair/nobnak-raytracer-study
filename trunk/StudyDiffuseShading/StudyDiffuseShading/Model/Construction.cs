@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Intersect;
 
 namespace StudyDiffuseShading.Model {
     public class Construction {
@@ -25,9 +26,9 @@ namespace StudyDiffuseShading.Model {
             target = new Triangle();
 
             foreach (var primitive in primitives) {
-                var distance = 0.0;
-                if (primitive.intersect(ray, ref distance) && distance < nearest) {
-                    nearest = distance;
+                IntersectResult result;
+                if (primitive.intersect(ray, out result) && result.t < nearest) {
+                    nearest = result.t;
                     target = primitive;
                 }
             }
