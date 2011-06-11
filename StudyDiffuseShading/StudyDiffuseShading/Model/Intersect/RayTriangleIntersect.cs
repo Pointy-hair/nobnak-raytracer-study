@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Util;
-using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Material;
 using System.Windows.Media;
+using StudyDiffuseShading.Model.Primitive;
 
 namespace StudyDiffuseShading.Model.Intersect {
     public class RayTriangleIntersect {
@@ -13,8 +14,8 @@ namespace StudyDiffuseShading.Model.Intersect {
             result = new IntersectResult();
 
             // from Fast, minimum storage Ray/Triangle intersection
-            var e1 = triangle.b - triangle.a;
-            var e2 = triangle.c - triangle.a;
+            var e1 = triangle.b.position - triangle.a.position;
+            var e2 = triangle.c.position - triangle.a.position;
 
             var p = Vector3D.CrossProduct(ray.direction, e2);
 
@@ -22,7 +23,7 @@ namespace StudyDiffuseShading.Model.Intersect {
             if (det < Constant.EPSILON)
                 return false;
 
-            var t = ray.origin - triangle.a;
+            var t = ray.origin - triangle.a.position;
 
             var uNumerator = Vector3D.DotProduct(p, t);
             if (uNumerator < 0 || det < uNumerator)

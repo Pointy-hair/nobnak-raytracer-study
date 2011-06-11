@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using StudyDiffuseShading.Model.Material;
 using StudyDiffuseShading.Model.Primitive;
 
 namespace StudyDiffuseShading.Model.Intersect {
