@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Util;
 
 namespace StudyDiffuseShading.Model {
     public class Screen {
@@ -25,12 +27,16 @@ namespace StudyDiffuseShading.Model {
             this.pixels = new byte[stride * height];
         }
 
-        public void setPixel(int row, int col, Color pixel) {
+        public void setPixel(int row, int col, Vector3D pixel) {
             var index = row * stride + col * bytesPerPixel;
-            pixels[index] = pixel.B;
-            pixels[index + 1] = pixel.G;
-            pixels[index + 2] = pixel.R;
-            pixels[index + 3] = byte.MaxValue;
+            var b = MathUtil.colorFromDouble(pixel.Z);
+            var g = MathUtil.colorFromDouble(pixel.Y);
+            var r = MathUtil.colorFromDouble(pixel.X);
+            var a = byte.MaxValue;
+            pixels[index] = b;
+            pixels[index + 1] = g;
+            pixels[index + 2] = r;
+            pixels[index + 3] = a;
         }
 
         public BitmapSource getImage() {

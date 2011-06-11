@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Material;
 using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Util;
 
 namespace StudyDiffuseShading.Model {
     public class Tracer {
@@ -16,13 +18,13 @@ namespace StudyDiffuseShading.Model {
         }
 
 
-        public Color traceRay(Ray ray) {
+        public Vector3D traceRay(Ray ray) {
             double nearest;
             Triangle target;
             if (!construction.findNearest(ray, double.MaxValue, out nearest, out target))
-                return Colors.Black;
+                return Constant.BLACK;
 
-            return Colors.White;
+            return Constant.WHITE;
         }
     }
 }

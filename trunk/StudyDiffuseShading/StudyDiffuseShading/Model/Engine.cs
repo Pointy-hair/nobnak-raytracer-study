@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
-using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Material;
 using System.Windows.Media;
+using StudyDiffuseShading.Model.Primitive;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
@@ -21,7 +22,11 @@ namespace StudyDiffuseShading.Model {
             double scale = 1.0;
 
             var primitives = new Construction();
-            primitives.add(new Triangle(new Vector3D(0, 20, 10), new Vector3D(-20, -20, 10), new Vector3D(20, -20, 10)));
+            primitives.add(new Triangle(
+                new Vector3D(0, 20, 10),
+                new Vector3D(-20, -20, 10),
+                new Vector3D(20, -20, 10),
+                new Matte()));
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
@@ -37,7 +42,8 @@ namespace StudyDiffuseShading.Model {
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {
                     Ray ray = window.getRay(row, column);
-                    screen.setPixel(row, column, tracer.traceRay(ray));
+                    Vector3D color = tracer.traceRay(ray);
+                    screen.setPixel(row, column, color);
                 }
             }
         }

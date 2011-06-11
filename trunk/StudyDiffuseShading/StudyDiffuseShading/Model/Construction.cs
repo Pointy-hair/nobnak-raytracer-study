@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
-using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Material;
 using StudyDiffuseShading.Model.Intersect;
+using StudyDiffuseShading.Model.Primitive;
 
 namespace StudyDiffuseShading.Model {
     public class Construction {
