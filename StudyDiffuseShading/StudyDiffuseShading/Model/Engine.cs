@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Material;
-using System.Windows.Media;
 using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Lighting;
+using StudyDiffuseShading.Model.Util;
+using System.Windows.Media.Media3D;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
@@ -26,11 +27,13 @@ namespace StudyDiffuseShading.Model {
                 new Vector3D(0, 20, 10),
                 new Vector3D(-20, -20, 10),
                 new Vector3D(20, -20, 10),
-                new Matte()));
+                new Matte(Constant.WHITE, 0.5, 1.0)));
+            var illumination = new Illumination(new Ambient(0.05, Constant.WHITE));
+            illumination.addLight(new StudyDiffuseShading.Model.Lighting.PointLight(2.0, Constant.WHITE, new Vector3D(0, 50, 50)));
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
-            this.tracer = new Tracer(primitives);
+            this.tracer = new Tracer(primitives, illumination);
         }
 
 

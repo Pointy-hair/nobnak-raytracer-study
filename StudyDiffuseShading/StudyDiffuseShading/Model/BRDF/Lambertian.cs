@@ -4,29 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media;
 using StudyDiffuseShading.Model.Util;
+using System.Windows.Media.Media3D;
 
 namespace StudyDiffuseShading.Model.BRDF {
-    public class Lambertian {
+    public class Lambertian : StudyDiffuseShading.Model.BRDF.IBRDF {
         private double kd;
-        private Color cd;
+        private Vector3D colorDiffuse;
 
-        private Color tmpRho;
-        private Color tmpF;
+        private Vector3D tmpRho;
+        private Vector3D tmpF;
 
 
-        public Lambertian(double kd, Color cd) {
+        public Lambertian(double kd, Vector3D cd) {
             this.kd = kd;
-            this.cd = cd;
-            this.tmpRho = Color.Multiply(cd, (float)kd);
-            this.tmpF = Color.Multiply(tmpRho, (float) Constant.INV_PI);
+            this.colorDiffuse = cd;
+            this.tmpRho = kd * cd;
+            this.tmpF = Constant.INV_PI * tmpRho;
         }
 
 
-        public Color f() {
+        public Vector3D f(Vector3D p, Vector3D wo, Vector3D wi) {
             return tmpF;
         }
 
-        public Color rho() {
+        public Vector3D rho() {
             return tmpRho;
         }
     }
