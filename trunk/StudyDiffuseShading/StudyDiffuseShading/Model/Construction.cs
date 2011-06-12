@@ -6,6 +6,7 @@ using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Material;
 using StudyDiffuseShading.Model.Intersect;
 using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Util;
 
 namespace StudyDiffuseShading.Model {
     public class Construction {
@@ -22,19 +23,26 @@ namespace StudyDiffuseShading.Model {
         }
 
 
-        public bool findNearest(Ray ray, double farDistance, out double nearest, out Triangle target) {
+        public bool findNearest(Ray ray, double farDistance, out double nearest, out Triangle target, out Collision collision) {
             nearest = double.PositiveInfinity;
             target = new Triangle();
 
+            IntersectResult result = new IntersectResult();
             foreach (var primitive in primitives) {
-                IntersectResult result;
                 if (primitive.intersect(ray, out result) && result.t < nearest) {
                     nearest = result.t;
                     target = primitive;
                 }
             }
 
-            return nearest < farDistance;
+            var found = Constant.EPSILON < nearest && nearest < farDistance;
+
+            collision = new Collision();
+            if (found) {
+                collision = new Collision(ray.origin + result.t * ray.direction, -ray.direction, target.getNormal(result.u, result.v));
+            }
+
+            return found;
         }
     }
 }

@@ -13,10 +13,7 @@ namespace StudyDiffuseShading.Model {
         public Ray(Vector3D origin, Vector3D direction) {
             this.origin = origin;
             this.direction = direction;
-        }
-
-        public void normalize() {
-            direction.Normalize();
+            this.direction.Normalize();
         }
     }
 }

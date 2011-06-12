@@ -71,12 +71,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\BRDF\IBRDF.cs" />
     <Compile Include="Model\BRDF\Lambertian.cs" />
     <Compile Include="Model\Construction.cs" />
     <Compile Include="Model\Engine.cs" />
     <Compile Include="Model\Intersect\IntersectResult.cs" />
     <Compile Include="Model\Intersect\RayTriangleIntersect.cs" />
+    <Compile Include="Model\Lighting\ILight.cs" />
+    <Compile Include="Model\Lighting\Ambient.cs" />
+    <Compile Include="Model\Lighting\Illumination.cs" />
+    <Compile Include="Model\Lighting\PointLight.cs" />
     <Compile Include="Model\Material\Matte.cs" />
+    <Compile Include="Model\Primitive\Collision.cs" />
     <Compile Include="Model\Primitive\Vertex.cs" />
     <Compile Include="Model\Ray.cs" />
     <Compile Include="Model\Screen.cs" />

@@ -36,6 +36,12 @@ namespace StudyDiffuseShading.Model.Primitive {
 
         public bool intersect(Ray ray, out IntersectResult result) {
             return intersectAlgorithm.intersect(ray, this, out result);
-        }        
+        }
+
+        public Vector3D getNormal(double u, double v) {
+            var normal = (1 - u - v) * a.normal + u * b.normal + v * c.normal;
+            normal.Normalize();
+            return normal;
+        }
     }
 }
