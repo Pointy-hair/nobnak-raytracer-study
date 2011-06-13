@@ -24,12 +24,22 @@ namespace StudyDiffuseShading.Model {
 
             var primitives = new Construction();
             primitives.add(new Triangle(
-                new Vertex(new Vector3D(0, 20, 10), new Vector3D(0, 1, 0)),
-                new Vertex(new Vector3D(-20, -20, 10), new Vector3D(-1, -1, 0)),
-                new Vertex(new Vector3D(20, -20, 10), new Vector3D(1, -1, 0)),
+                new Vector3D(-60, 80, 0),
+                new Vector3D(60, -80, 0),
+                new Vector3D(60, 80, 0),
                 new Matte(Constant.WHITE, 0.5, 1.0)));
-            var illumination = new Illumination(new Ambient(0.05, Constant.WHITE));
-            illumination.addLight(new StudyDiffuseShading.Model.Lighting.PointLight(2.0, Constant.WHITE, new Vector3D(0, 50, 50)));
+            primitives.add(new Triangle(
+                new Vector3D(-60, 80, 0),
+                new Vector3D(-60, -80, 0),
+                new Vector3D(60, -80, 0),
+                new Matte(Constant.WHITE, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(60, 80, 0),
+                new Vector3D(60, -80, 0),
+                new Vector3D(60, -80, 40),
+                new Matte(Constant.BLUE, 0.5, 1.0)));
+            var illumination = new Illumination(new Ambient(0.1, Constant.WHITE));
+            illumination.addLight(new StudyDiffuseShading.Model.Lighting.PointLight(2.0, Constant.WHITE, new Vector3D(0, 00, 50)));
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);

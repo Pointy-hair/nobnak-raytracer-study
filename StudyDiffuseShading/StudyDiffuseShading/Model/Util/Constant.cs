@@ -11,5 +11,8 @@ namespace StudyDiffuseShading.Model.Util {
 
         public static readonly Vector3D BLACK = new Vector3D(0, 0, 0);
         public static readonly Vector3D WHITE = new Vector3D(1, 1, 1);
+        public static readonly Vector3D RED = new Vector3D(1, 0, 0);
+        public static readonly Vector3D GREEN = new Vector3D(0, 1, 0);
+        public static readonly Vector3D BLUE = new Vector3D(0, 0, 1);
     }
 }
