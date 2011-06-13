@@ -24,20 +24,55 @@ namespace StudyDiffuseShading.Model {
 
             var primitives = new Construction();
             primitives.add(new Triangle(
-                new Vector3D(-60, 80, 0),
-                new Vector3D(60, -80, 0),
-                new Vector3D(60, 80, 0),
+                new Vector3D(-80, 80, 0),
+                new Vector3D(80, -80, 0),
+                new Vector3D(80, 80, 0),
                 new Matte(Constant.WHITE, 0.5, 1.0)));
             primitives.add(new Triangle(
-                new Vector3D(-60, 80, 0),
-                new Vector3D(-60, -80, 0),
-                new Vector3D(60, -80, 0),
+                new Vector3D(-80, 80, 0),
+                new Vector3D(-80, -80, 0),
+                new Vector3D(80, -80, 0),
                 new Matte(Constant.WHITE, 0.5, 1.0)));
             primitives.add(new Triangle(
-                new Vector3D(60, 80, 0),
-                new Vector3D(60, -80, 0),
-                new Vector3D(60, -80, 40),
-                new Matte(Constant.BLUE, 0.5, 1.0)));
+                new Vector3D(80, 80, 0),
+                new Vector3D(80, -80, 0),
+                new Vector3D(80, -80, 40),
+                new Matte(Constant.GREEN, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(80, 80, 0),
+                new Vector3D(80, -80, 40),
+                new Vector3D(80, 80, 40),
+                new Matte(Constant.GREEN, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 40),
+                new Vector3D(-80, -80, 40),
+                new Vector3D(-80, -80, 0),
+                new Matte(Constant.RED, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 40),
+                new Vector3D(-80, -80, 0),
+                new Vector3D(-80, 80, 0),
+                new Matte(Constant.RED, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, -80, 0),
+                new Vector3D(-80, -80, 40),
+                new Vector3D(80, -80, 40),
+                new Matte(Constant.WHITE, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, -80, 0),
+                new Vector3D(80, -80, 40),
+                new Vector3D(80, -80, 0),
+                new Matte(Constant.WHITE, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 40),
+                new Vector3D(-80, 80, 0),
+                new Vector3D(80, 80, 0),
+                new Matte(Constant.WHITE, 0.5, 1.0)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 40),
+                new Vector3D(80, 80, 0),
+                new Vector3D(80, 80, 40),
+                new Matte(Constant.WHITE, 0.5, 1.0)));
             var illumination = new Illumination(new Ambient(0.1, Constant.WHITE));
             illumination.addLight(new StudyDiffuseShading.Model.Lighting.PointLight(2.0, Constant.WHITE, new Vector3D(0, 00, 50)));
 
