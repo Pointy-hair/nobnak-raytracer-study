@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Media;
 using StudyDiffuseShading.Model.Util;
 using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model.BRDF {
     public class Lambertian : StudyDiffuseShading.Model.BRDF.IBRDF {
@@ -24,6 +25,21 @@ namespace StudyDiffuseShading.Model.BRDF {
 
 
         public Vector3D f(Vector3D p, Vector3D wo, Vector3D wi) {
+            return tmpF;
+        }
+
+        public Vector3D sampleF(Vector3D p, Vector3D wo, Vector3D n, ISampler sampler, out Vector3D wi, out double pdf) {
+            Vector3D v, w;
+            MathUtil.constructCoordinate(n, out v, out w);
+
+            Vector3D sample = sampler.sampleOnHemisphere();
+            wi = sample.X * n + sample.Y * v + sample.Z * w;
+            wi.Normalize();
+
+            double cosTheta = Vector3D.DotProduct(n, wi);
+            double sinTheta = Math.Sqrt(1.0 - cosTheta * cosTheta);
+            pdf = cosTheta * sinTheta * Constant.INV_PI;
+
             return tmpF;
         }
 

@@ -8,6 +8,7 @@ using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Lighting;
 using StudyDiffuseShading.Model.Util;
 using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model.Material {
     public struct Matte {
@@ -31,6 +32,15 @@ namespace StudyDiffuseShading.Model.Material {
             }
 
             return l;
+        }
+
+        public Vector3D shadeOnPath(Tracer tracer, ISampler sampler, Collision collision) {
+            Vector3D wi;
+            double pdf;
+            Vector3D f = diffuse.sampleF(collision.point, collision.wo, collision.normal, sampler, out wi, out pdf);
+
+            double ndotwi = Vector3D.DotProduct(collision.normal, wi);
+            return MathUtil.multiply(f, tracer.traceRay(new Ray(collision.point, wi))) * ndotwi / pdf;
         }
     }
 }
