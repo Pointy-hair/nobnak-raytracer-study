@@ -7,6 +7,7 @@ using StudyDiffuseShading.Model.Primitive;
 using StudyDiffuseShading.Model.Lighting;
 using StudyDiffuseShading.Model.Util;
 using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
@@ -78,7 +79,8 @@ namespace StudyDiffuseShading.Model {
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
-            this.tracer = new Tracer(primitives, illumination);
+            var sampler = new SimpleSampler();
+            this.tracer = new Tracer(primitives, illumination, sampler, 5);
         }
 
 
