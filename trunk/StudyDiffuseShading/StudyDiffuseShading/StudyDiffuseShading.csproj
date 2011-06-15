@@ -90,6 +90,7 @@
     <Compile Include="Model\Sampler\SimpleSampler.cs" />
     <Compile Include="Model\Screen.cs" />
     <Compile Include="Model\Util\MathUtil.cs" />
+    <Compile Include="Model\Util\SamplerUtil.cs" />
     <Compile Include="Model\Window.cs" />
     <Compile Include="Model\Tracer.cs" />
     <Compile Include="Model\Primitive\Triangle.cs" />

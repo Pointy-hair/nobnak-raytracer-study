@@ -35,12 +35,10 @@ namespace StudyDiffuseShading.Model.Material {
         }
 
         public Vector3D shadeOnPath(Tracer tracer, ISampler sampler, Collision collision) {
-            Vector3D wi;
-            double pdf;
-            Vector3D f = diffuse.sampleF(collision.point, collision.wo, collision.normal, sampler, out wi, out pdf);
+            Vector3D wi = SamplerUtil.sampleWi(collision.normal, sampler);
+            Vector3D li = tracer.traceRay(new Ray(collision.point, wi));
 
-            double ndotwi = Vector3D.DotProduct(collision.normal, wi);
-            return MathUtil.multiply(f, tracer.traceRay(new Ray(collision.point, wi))) * ndotwi / pdf;
+            return diffuse.calcLo(collision.point, collision.wo, wi, collision.normal, li);
         }
     }
 }
