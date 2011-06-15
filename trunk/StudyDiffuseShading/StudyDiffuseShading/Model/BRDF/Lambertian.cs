@@ -29,11 +29,11 @@ namespace StudyDiffuseShading.Model.BRDF {
         }
 
         public Vector3D sampleF(Vector3D p, Vector3D wo, Vector3D n, ISampler sampler, out Vector3D wi, out double pdf) {
-            Vector3D v, w;
-            MathUtil.constructCoordinate(n, out v, out w);
+            Vector3D x, y;
+            MathUtil.generateXYFromZ(n, out x, out y);
 
             Vector3D sample = sampler.sampleOnHemisphere();
-            wi = sample.X * n + sample.Y * v + sample.Z * w;
+            wi = sample.X * x + sample.Y * y + sample.Z * n;
             wi.Normalize();
 
             double cosTheta = Vector3D.DotProduct(n, wi);

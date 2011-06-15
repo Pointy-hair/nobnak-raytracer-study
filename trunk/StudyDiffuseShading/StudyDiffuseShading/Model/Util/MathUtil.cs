@@ -14,11 +14,20 @@ namespace StudyDiffuseShading.Model.Util {
             return new Vector3D(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
         }
 
-        public static void constructCoordinate(Vector3D u, out Vector3D v, out Vector3D w) {
-            Vector3D flipU = new Vector3D(u.Y, u.Z, -u.X);
-            v = Vector3D.CrossProduct(u, flipU);
-            v.Normalize();
-            w = Vector3D.CrossProduct(u, v);
+        public static void generateXYFromZ(Vector3D z, out Vector3D x, out Vector3D y) {
+# if falsen
+            Vector3D unique = new Vector3D(0.0034, 1.0, 0.0071);
+
+            w = Vector3D.CrossProduct(unique, u);
+            w.Normalize();
+            v = Vector3D.CrossProduct(w, u);
+# endif
+
+            Vector3D rotateZ = new Vector3D(z.Y, z.Z, -z.X);
+
+            y = Vector3D.CrossProduct(rotateZ, z);
+            y.Normalize();
+            x = Vector3D.CrossProduct(y, z);
         }
     }
 }

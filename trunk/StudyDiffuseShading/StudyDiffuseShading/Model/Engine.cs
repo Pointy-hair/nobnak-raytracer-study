@@ -23,64 +23,68 @@ namespace StudyDiffuseShading.Model {
             Vector3D eye = new Vector3D(0, 0, 100);
             double scale = 1.0;
 
+            var diffuse = 0.8;
             var primitives = new Construction();
             primitives.add(new Triangle(
-                new Vector3D(-80, 80, 0),
-                new Vector3D(80, -80, 0),
-                new Vector3D(80, 80, 0),
-                new Matte(Constant.WHITE, 0.5, 1.0)));
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 0),
-                new Vector3D(-80, -80, 0),
-                new Vector3D(80, -80, 0),
-                new Matte(Constant.WHITE, 0.5, 1.0)));
-            primitives.add(new Triangle(
                 new Vector3D(80, 80, 0),
                 new Vector3D(80, -80, 0),
                 new Vector3D(80, -80, 40),
-                new Matte(Constant.GREEN, 0.5, 1.0)));
+                new Matte(Constant.GREEN, 0.5, diffuse)));
             primitives.add(new Triangle(
                 new Vector3D(80, 80, 0),
                 new Vector3D(80, -80, 40),
                 new Vector3D(80, 80, 40),
-                new Matte(Constant.GREEN, 0.5, 1.0)));
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 40),
-                new Vector3D(-80, -80, 40),
-                new Vector3D(-80, -80, 0),
-                new Matte(Constant.RED, 0.5, 1.0)));
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 40),
-                new Vector3D(-80, -80, 0),
-                new Vector3D(-80, 80, 0),
-                new Matte(Constant.RED, 0.5, 1.0)));
+                new Matte(Constant.GREEN, 0.5, diffuse)));
             primitives.add(new Triangle(
                 new Vector3D(-80, -80, 0),
                 new Vector3D(-80, -80, 40),
                 new Vector3D(80, -80, 40),
-                new Matte(Constant.WHITE, 0.5, 1.0)));
+                new Matte(Constant.WHITE, 0.5, diffuse)));
             primitives.add(new Triangle(
                 new Vector3D(-80, -80, 0),
                 new Vector3D(80, -80, 40),
                 new Vector3D(80, -80, 0),
-                new Matte(Constant.WHITE, 0.5, 1.0)));
+                new Matte(Constant.WHITE, 0.5, diffuse)));
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 40),
                 new Vector3D(-80, 80, 0),
                 new Vector3D(80, 80, 0),
-                new Matte(Constant.WHITE, 0.5, 1.0)));
+                new Matte(Constant.WHITE, 0.5, diffuse)));
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 40),
                 new Vector3D(80, 80, 0),
                 new Vector3D(80, 80, 40),
-                new Matte(Constant.WHITE, 0.5, 1.0)));
+                new Matte(Constant.WHITE, 0.5, diffuse)));
+
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 0),
+                new Vector3D(80, -80, 0),
+                new Vector3D(80, 80, 0),
+                new Matte(Constant.WHITE, 0.5, diffuse)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 0),
+                new Vector3D(-80, -80, 0),
+                new Vector3D(80, -80, 0),
+                new Matte(Constant.WHITE, 0.5, diffuse)));
+
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 40),
+                new Vector3D(-80, -80, 40),
+                new Vector3D(-80, -80, 0),
+                new Matte(Constant.RED, 0.5, diffuse)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 40),
+                new Vector3D(-80, -80, 0),
+                new Vector3D(-80, 80, 0),
+                new Matte(Constant.RED, 0.5, diffuse)));
+
             var illumination = new Illumination(new Ambient(0.1, Constant.WHITE));
             illumination.addLight(new StudyDiffuseShading.Model.Lighting.PointLight(2.0, Constant.WHITE, new Vector3D(0, 00, 50)));
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
             var sampler = new SimpleSampler();
-            this.tracer = new Tracer(primitives, illumination, sampler, 5);
+            this.tracer = new Tracer(primitives, illumination, sampler, 4);
         }
 
 
@@ -89,10 +93,15 @@ namespace StudyDiffuseShading.Model {
         }
 
         public void render() {
+            int sampleCount = 1;
+
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {
                     Ray ray = window.getRay(row, column);
-                    Vector3D color = tracer.traceRay(ray);
+                    Vector3D color = new Vector3D();
+                    for (int i = 0; i < sampleCount; i++)
+                        color += tracer.traceRay(ray);
+                    color /= sampleCount;
                     screen.setPixel(row, column, color);
                 }
             }

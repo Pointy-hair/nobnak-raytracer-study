@@ -19,7 +19,7 @@ namespace StudyDiffuseShading.Model.Sampler {
             var rand2 = randomer.NextDouble();
 
             double cosPhi = Math.Cos(2.0 * Math.PI * rand1);
-            double sinPhi = Math.Cos(2.0 * Math.PI * rand1);
+            double sinPhi = Math.Sin(2.0 * Math.PI * rand1);
 
             double cosTheta2 = 1.0 - rand2;
             double cosTheta = Math.Sqrt(cosTheta2);
