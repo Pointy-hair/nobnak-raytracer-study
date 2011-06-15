@@ -86,6 +86,7 @@
     <Compile Include="Model\Primitive\Collision.cs" />
     <Compile Include="Model\Primitive\Vertex.cs" />
     <Compile Include="Model\Ray.cs" />
+    <Compile Include="Model\Sampler\ConstantSampler.cs" />
     <Compile Include="Model\Sampler\SimpleSampler.cs" />
     <Compile Include="Model\Screen.cs" />
     <Compile Include="Model\Util\MathUtil.cs" />
