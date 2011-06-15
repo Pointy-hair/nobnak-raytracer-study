@@ -8,6 +8,7 @@ using StudyDiffuseShading.Model.Lighting;
 using StudyDiffuseShading.Model.Util;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Sampler;
+using System.Diagnostics;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
@@ -102,6 +103,8 @@ namespace StudyDiffuseShading.Model {
                     for (int i = 0; i < sampleCount; i++)
                         color += tracer.traceRay(ray);
                     color /= sampleCount;
+                    if (color.Length > 2)
+                        Debug.Print("color={0}", color);
                     screen.setPixel(row, column, color);
                 }
             }
