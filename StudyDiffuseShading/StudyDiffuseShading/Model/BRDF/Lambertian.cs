@@ -8,7 +8,7 @@ using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model.BRDF {
-    public class Lambertian : StudyDiffuseShading.Model.BRDF.IBRDF {
+    public class Lambertian : IBRDF {
         private double kd;
         private Vector3D colorDiffuse;
 
@@ -28,23 +28,15 @@ namespace StudyDiffuseShading.Model.BRDF {
             return cacheF;
         }
 
-        public Vector3D sampleF(Vector3D p, Vector3D wo, Vector3D n, ISampler sampler, out Vector3D wi, out double pdf) {
-            Vector3D x, y;
-            MathUtil.generateXYFromZ(n, out x, out y);
-
-            Vector3D sample = sampler.sampleOnHemisphere();
-            wi = sample.X * x + sample.Y * y + sample.Z * n;
-            wi.Normalize();
-
-            double cosTheta = Vector3D.DotProduct(n, wi);
-            double sinTheta = Math.Sqrt(1.0 - cosTheta * cosTheta);
-            pdf = cosTheta * sinTheta * Constant.INV_PI;
-
-            return cacheF;
-        }
-
         public Vector3D rho() {
             return cacheRho;
+        }
+
+
+        public Vector3D calcLo(Vector3D p, Vector3D wo, Vector3D wi, Vector3D n, Vector3D li) {
+            Vector3D sampleF = f(p, wo, wi);
+
+            return MathUtil.multiply(sampleF, li) * Math.PI;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace StudyDiffuseShading.Model {
             Vector3D eye = new Vector3D(0, 0, 100);
             double scale = 1.0;
 
-            var diffuse = 0.3;
+            var diffuse = 0.8;
             var primitives = new Construction();
             primitives.add(new Triangle(
                 new Vector3D(80, 80, 0),
@@ -84,7 +84,7 @@ namespace StudyDiffuseShading.Model {
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
             var sampler = new SimpleSampler();
-            this.tracer = new Tracer(primitives, illumination, sampler, 5);
+            this.tracer = new Tracer(primitives, illumination, sampler, 10);
         }
 
 
