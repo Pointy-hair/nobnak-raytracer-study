@@ -13,18 +13,18 @@ namespace StudyDiffuseShading.Model.Primitive {
         public readonly Vertex a;
         public readonly Vertex b;
         public readonly Vertex c;
-        public readonly Matte matter;
+        public readonly IMaterial matter;
 
         private RayTriangleIntersect intersectAlgorithm;
 
 
-        public Triangle(Vector3D a, Vector3D b, Vector3D c, Matte matter) 
+        public Triangle(Vector3D a, Vector3D b, Vector3D c, IMaterial matter) 
             : this(a, b, c, Vector3D.CrossProduct(b - a, c - a), matter) { }
 
-        public Triangle(Vector3D posA, Vector3D posB, Vector3D posC, Vector3D commonNormal, Matte matter)
+        public Triangle(Vector3D posA, Vector3D posB, Vector3D posC, Vector3D commonNormal, IMaterial matter)
             : this(new Vertex(posA, commonNormal), new Vertex(posB, commonNormal), new Vertex(posC, commonNormal), matter) { }
 
-        public Triangle(Vertex a, Vertex b, Vertex c, Matte matter) {
+        public Triangle(Vertex a, Vertex b, Vertex c, IMaterial matter) {
             this.a = a;
             this.b = b;
             this.c = c;

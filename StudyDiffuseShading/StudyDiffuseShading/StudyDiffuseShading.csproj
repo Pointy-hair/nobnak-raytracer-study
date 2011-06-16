@@ -72,6 +72,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\BRDF\IBRDF.cs" />
+    <Compile Include="Model\Material\Emissive.cs" />
+    <Compile Include="Model\Material\IMaterial.cs" />
     <Compile Include="Model\Sampler\ISampler.cs" />
     <Compile Include="Model\BRDF\Lambertian.cs" />
     <Compile Include="Model\Construction.cs" />

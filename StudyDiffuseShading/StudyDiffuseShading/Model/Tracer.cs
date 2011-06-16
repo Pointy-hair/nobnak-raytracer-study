@@ -35,7 +35,7 @@ namespace StudyDiffuseShading.Model {
             Triangle target;
             Collision collision;
             if (!construction.findNearest(ray, double.MaxValue, out nearest, out target, out collision))
-                return Constant.WHITE;
+                return illumination.ambient.l();
 
             depth++;
             Vector3D result = target.matter.shadeOnPath(this, sampler, collision);

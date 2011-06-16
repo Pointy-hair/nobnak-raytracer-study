@@ -26,6 +26,8 @@ namespace StudyDiffuseShading.Model {
 
             var diffuse = 0.8;
             var primitives = new Construction();
+
+            // 右面
             primitives.add(new Triangle(
                 new Vector3D(80, 80, 0),
                 new Vector3D(80, -80, 0),
@@ -36,6 +38,8 @@ namespace StudyDiffuseShading.Model {
                 new Vector3D(80, -80, 40),
                 new Vector3D(80, 80, 40),
                 new Matte(Constant.GREEN, 0.5, diffuse)));
+
+            // 下面
             primitives.add(new Triangle(
                 new Vector3D(-80, -80, 0),
                 new Vector3D(-80, -80, 40),
@@ -46,28 +50,38 @@ namespace StudyDiffuseShading.Model {
                 new Vector3D(80, -80, 40),
                 new Vector3D(80, -80, 0),
                 new Matte(Constant.WHITE, 0.5, diffuse)));
+
+            // 上面
+            IMaterial emitter;
+# if false
+            emitter = new Matte(Constant.WHITE, 0.5, diffuse);
+# else
+            emitter = new Emissive(Constant.WHITE, 1.0);
+# endif
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 40),
                 new Vector3D(-80, 80, 0),
                 new Vector3D(80, 80, 0),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
+                emitter));
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 40),
                 new Vector3D(80, 80, 0),
                 new Vector3D(80, 80, 40),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
+                emitter));
 
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 0),
-                new Vector3D(80, -80, 0),
-                new Vector3D(80, 80, 0),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
+            // 背面
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 0),
                 new Vector3D(-80, -80, 0),
                 new Vector3D(80, -80, 0),
                 new Matte(Constant.WHITE, 0.5, diffuse)));
+            primitives.add(new Triangle(
+                new Vector3D(-80, 80, 0),
+                new Vector3D(80, -80, 0),
+                new Vector3D(80, 80, 0),
+                new Matte(Constant.WHITE, 0.5, diffuse)));
 
+            // 左面
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 40),
                 new Vector3D(-80, -80, 40),

@@ -11,7 +11,7 @@ using StudyDiffuseShading.Model.Primitive;
 using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model.Material {
-    public struct Matte {
+    public class Matte : IMaterial {
         private Lambertian ambient;
         private Lambertian diffuse;
 
