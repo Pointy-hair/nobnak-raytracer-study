@@ -18,7 +18,7 @@ namespace StudyDiffuseShading.Model.Material {
         }
 
 
-        public Vector3D shadeOnPath(Tracer tracer, ISampler sampler, Collision collision) {
+        public Vector3D shadeOnPath(Tracer tracer, IHemispherecalSampler sampler, Collision collision) {
             return ce * ls;
         }
     }

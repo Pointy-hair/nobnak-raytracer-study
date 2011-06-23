@@ -8,6 +8,6 @@ using StudyDiffuseShading.Model.Primitive;
 
 namespace StudyDiffuseShading.Model.Material {
     public interface IMaterial {
-        Vector3D shadeOnPath(Tracer tracer, ISampler sampler, Collision collision);
+        Vector3D shadeOnPath(Tracer tracer, IHemispherecalSampler sampler, Collision collision);
     }
 }

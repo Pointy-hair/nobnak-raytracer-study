@@ -34,7 +34,7 @@ namespace StudyDiffuseShading.Model.Material {
             return l;
         }
 
-        public Vector3D shadeOnPath(Tracer tracer, ISampler sampler, Collision collision) {
+        public Vector3D shadeOnPath(Tracer tracer, IHemispherecalSampler sampler, Collision collision) {
             Vector3D wi = SamplerUtil.sampleWi(collision.normal, sampler);
             Vector3D li = tracer.traceRay(new Ray(collision.point, wi));
 

@@ -5,16 +5,16 @@ using System.Text;
 using System.Windows.Media.Media3D;
 
 namespace StudyDiffuseShading.Model.Sampler {
-    public class SimpleSampler : ISampler {
+    public class SimpleHemispherecalSampler : IHemispherecalSampler {
         private Random randomer;
 
 
-        public SimpleSampler() {
+        public SimpleHemispherecalSampler() {
             this.randomer = new Random();
         }
 
         
-        public Vector3D sampleOnHemisphere() {
+        public Vector3D sample() {
             var rand1 = randomer.NextDouble();
             var rand2 = randomer.NextDouble();
 

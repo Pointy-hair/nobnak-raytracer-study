@@ -19,9 +19,9 @@ namespace StudyDiffuseShading.Model {
         }
 
 
-        public Ray getRay(int row, int column) {
-            var screenX = scale * (column - width * 0.5 + 0.5);
-            var screenY = scale * ((height - row) - height * 0.5 + 0.5);
+        public Ray getRay(double row, double column) {
+            var screenX = scale * (column - width * 0.5);
+            var screenY = scale * ((height - row) - height * 0.5);
 
             Ray ray = new Ray(eye, new Vector3D(screenX, screenY, 0) - eye);
             return ray;
