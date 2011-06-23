@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Media.Media3D;
 
 namespace StudyDiffuseShading.Model.Sampler {
-    public class ConstantSampler : ISampler {
+    public class ConstantSampler : IHemispherecalSampler {
         private Vector3D wi;
 
 
@@ -15,7 +15,7 @@ namespace StudyDiffuseShading.Model.Sampler {
         }
 
 
-        public Vector3D sampleOnHemisphere() {
+        public Vector3D sample() {
             return wi;
         }
     }

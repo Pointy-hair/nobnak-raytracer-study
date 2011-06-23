@@ -14,11 +14,11 @@ namespace StudyDiffuseShading.Model {
     public class Tracer {
         private Construction construction;
         private Illumination illumination;
-        private ISampler sampler;
+        private IHemispherecalSampler sampler;
         private int maxDepth;
         private int depth;
 
-        public Tracer(Construction construction, Illumination illumination, ISampler sampler, int maxDepth) {
+        public Tracer(Construction construction, Illumination illumination, IHemispherecalSampler sampler, int maxDepth) {
             this.construction = construction;
             this.illumination = illumination;
             this.sampler = sampler;

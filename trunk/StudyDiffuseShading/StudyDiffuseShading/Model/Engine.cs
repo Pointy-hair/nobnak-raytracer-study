@@ -53,21 +53,27 @@ namespace StudyDiffuseShading.Model {
 
             // 上面
             IMaterial emitter;
-# if false
-            emitter = new Matte(Constant.WHITE, 0.5, diffuse);
-# else
-            emitter = new Emissive(Constant.WHITE, 1.0);
-# endif
+            emitter = new Emissive(Constant.WHITE, 10.0);
+            primitives.add(new Triangle(
+                new Vector3D(-20, 79.9, 20),
+                new Vector3D(-20, 79.9, 10),
+                new Vector3D(20, 79.9, 10),
+                emitter));
+            primitives.add(new Triangle(
+                new Vector3D(-20, 79.9, 20),
+                new Vector3D(20, 79.9, 10),
+                new Vector3D(20, 79.9, 20),
+                emitter));
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 40),
                 new Vector3D(-80, 80, 0),
                 new Vector3D(80, 80, 0),
-                emitter));
+                new Matte(Constant.WHITE, 0.5, diffuse)));
             primitives.add(new Triangle(
                 new Vector3D(-80, 80, 40),
                 new Vector3D(80, 80, 0),
                 new Vector3D(80, 80, 40),
-                emitter));
+                new Matte(Constant.WHITE, 0.5, diffuse)));
 
             // 背面
             primitives.add(new Triangle(
@@ -98,7 +104,7 @@ namespace StudyDiffuseShading.Model {
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
-            var sampler = new SimpleSampler();
+            var sampler = new SimpleHemispherecalSampler();
             this.tracer = new Tracer(primitives, illumination, sampler, 10);
         }
 
@@ -108,18 +114,19 @@ namespace StudyDiffuseShading.Model {
         }
 
         public void render() {
-            int sampleCount = 1;
+            int sampleN = 10;
+            var sampler = new JitteredSampler(sampleN);
 
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {
-                    Ray ray = window.getRay(row, column);
                     Vector3D color = new Vector3D();
-                    for (int i = 0; i < sampleCount; i++)
+                    foreach (var sample in sampler.getSampler()) {
+                        var ray = window.getRay(row + sample.X, column + sample.Y);
                         color += tracer.traceRay(ray);
-                    color /= sampleCount;
-                    if (color.Length > 2)
-                        Debug.Print("color={0}", color);
+                    }
+                    color /= sampler.Count;
                     screen.setPixel(row, column, color);
+
                 }
             }
         }
