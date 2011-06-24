@@ -21,91 +21,52 @@ namespace StudyDiffuseShading.Model {
 
 
         public Engine() {
-            Vector3D eye = new Vector3D(0, 0, 100);
-            double scale = 1.0;
+            Vector3D eye = new Vector3D(278, 273, -800);
+            double scale = 2;
 
             var diffuse = 0.8;
+            var specular = 1.0;
             var primitives = new Construction();
 
-            // 右面
-            primitives.add(new Triangle(
-                new Vector3D(80, 80, 0),
-                new Vector3D(80, -80, 0),
-                new Vector3D(80, -80, 40),
-                new Matte(Constant.GREEN, 0.5, diffuse)));
-            primitives.add(new Triangle(
-                new Vector3D(80, 80, 0),
-                new Vector3D(80, -80, 40),
-                new Vector3D(80, 80, 40),
-                new Matte(Constant.GREEN, 0.5, diffuse)));
+            IMaterial matte = new Matte(Constant.WHITE, diffuse);
+            IMaterial emitter = new Emissive(Constant.WHITE, 10.0);
+# if false
+            var rightMaterial = new Mirror(specular, Constant.GREEN);
+            var leftMaterial = new Mirror(specular, Constant.RED); 
+# else
+            var rightMaterial = new Matte(Constant.GREEN, diffuse);
+            var leftMaterial = new Matte(Constant.RED, diffuse);
+# endif
 
             // 下面
+            //white
+            //552.8 0.0   0.0   
+            //  0.0 0.0   0.0
+            //  0.0 0.0 559.2
+            //549.6 0.0 559.2
             primitives.add(new Triangle(
-                new Vector3D(-80, -80, 0),
-                new Vector3D(-80, -80, 40),
-                new Vector3D(80, -80, 40),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
+                new Vector3D(552.8, 0.0, 0.0),
+                new Vector3D(0.0, 0.0, 0.0),
+                new Vector3D(0.0, 0.0, 559.2),
+                matte));
             primitives.add(new Triangle(
-                new Vector3D(-80, -80, 0),
-                new Vector3D(80, -80, 40),
-                new Vector3D(80, -80, 0),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
+                new Vector3D(552.8, 0.0, 0.0),
+                new Vector3D(0.0, 0.0, 559.2),
+                new Vector3D(549.6, 0.0, 559.2),
+                matte));
+
+            // 右面
 
             // 上面
-            IMaterial emitter;
-            emitter = new Emissive(Constant.WHITE, 10.0);
-            primitives.add(new Triangle(
-                new Vector3D(-20, 79.9, 20),
-                new Vector3D(-20, 79.9, 10),
-                new Vector3D(20, 79.9, 10),
-                emitter));
-            primitives.add(new Triangle(
-                new Vector3D(-20, 79.9, 20),
-                new Vector3D(20, 79.9, 10),
-                new Vector3D(20, 79.9, 20),
-                emitter));
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 40),
-                new Vector3D(-80, 80, 0),
-                new Vector3D(80, 80, 0),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 40),
-                new Vector3D(80, 80, 0),
-                new Vector3D(80, 80, 40),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
 
             // 背面
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 0),
-                new Vector3D(-80, -80, 0),
-                new Vector3D(80, -80, 0),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 0),
-                new Vector3D(80, -80, 0),
-                new Vector3D(80, 80, 0),
-                new Matte(Constant.WHITE, 0.5, diffuse)));
 
             // 左面
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 40),
-                new Vector3D(-80, -80, 40),
-                new Vector3D(-80, -80, 0),
-                new Matte(Constant.RED, 0.5, diffuse)));
-            primitives.add(new Triangle(
-                new Vector3D(-80, 80, 40),
-                new Vector3D(-80, -80, 0),
-                new Vector3D(-80, 80, 0),
-                new Matte(Constant.RED, 0.5, diffuse)));
-
-            var illumination = new Illumination(new Ambient(0.1, Constant.WHITE));
-            illumination.addLight(new StudyDiffuseShading.Model.Lighting.PointLight(2.0, Constant.WHITE, new Vector3D(0, 00, 50)));
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
             var sampler = new SimpleHemispherecalSampler();
-            this.tracer = new Tracer(primitives, illumination, sampler, 10);
+            this.tracer = new Tracer(primitives, new Ambient(0.05, Constant.WHITE), sampler, 10);
         }
 
 
@@ -114,7 +75,7 @@ namespace StudyDiffuseShading.Model {
         }
 
         public void render() {
-            int sampleN = 10;
+            int sampleN = 1;
             var sampler = new JitteredSampler(sampleN);
 
             for (int row = 0; row < height; row++) {

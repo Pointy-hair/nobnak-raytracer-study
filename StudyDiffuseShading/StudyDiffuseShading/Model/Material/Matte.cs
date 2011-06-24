@@ -12,29 +12,14 @@ using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model.Material {
     public class Matte : IMaterial {
-        private Lambertian ambient;
         private Lambertian diffuse;
 
 
-        public Matte(Vector3D color, double ambient, double diffuse) {
-            this.ambient = new Lambertian(ambient, color);
+        public Matte(Vector3D color, double diffuse) {
             this.diffuse = new Lambertian(diffuse, color);
         }
 
-        public Vector3D shade(Illumination illumination, Collision collision) {
-            var l = MathUtil.multiply(ambient.rho(), illumination.ambient.l());
-            
-            foreach (var light in illumination.lights) {
-                var wi = - light.getDirection(collision.point);
-                var ndotwi = Vector3D.DotProduct(collision.normal, wi);
-                if (ndotwi > Constant.EPSILON)
-                    l += MathUtil.multiply(diffuse.f(collision.point, collision.wo, wi), light.l()) * ndotwi;
-            }
-
-            return l;
-        }
-
-        public Vector3D shadeOnPath(Tracer tracer, IHemispherecalSampler sampler, Collision collision) {
+        public Vector3D shade(Tracer tracer, IHemispherecalSampler sampler, Collision collision) {
             Vector3D wi = SamplerUtil.sampleWi(collision.normal, sampler);
             Vector3D li = tracer.traceRay(new Ray(collision.point, wi));
 

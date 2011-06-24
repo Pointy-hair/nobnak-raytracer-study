@@ -18,6 +18,7 @@ namespace StudyDiffuseShading.Model {
         public readonly int stride;
         public readonly byte[] pixels;
         public readonly int bytesPerPixel;
+        public readonly double gamma;
 
         public Screen(int width, int height) {
             this.width = width;
@@ -25,13 +26,15 @@ namespace StudyDiffuseShading.Model {
             this.bytesPerPixel = pf.BitsPerPixel / 8;
             this.stride = width * (bytesPerPixel);
             this.pixels = new byte[stride * height];
+            this.gamma = 2.2;
         }
 
         public void setPixel(int row, int col, Vector3D pixel) {
             var index = row * stride + col * bytesPerPixel;
-            var b = MathUtil.colorFromDouble(pixel.Z);
-            var g = MathUtil.colorFromDouble(pixel.Y);
-            var r = MathUtil.colorFromDouble(pixel.X);
+            var invGamma = 1 / 2.2;
+            var b = MathUtil.colorFromDouble(Math.Pow(pixel.Z, invGamma));
+            var g = MathUtil.colorFromDouble(Math.Pow(pixel.Y, invGamma));
+            var r = MathUtil.colorFromDouble(Math.Pow(pixel.X, invGamma));
             var a = byte.MaxValue;
             pixels[index] = b;
             pixels[index + 1] = g;

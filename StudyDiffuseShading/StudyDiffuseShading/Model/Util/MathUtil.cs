@@ -29,5 +29,8 @@ namespace StudyDiffuseShading.Model.Util {
             y.Normalize();
             x = Vector3D.CrossProduct(y, z);
         }
+        public static Vector3D reflectDirection(Vector3D n, Vector3D wi) {
+            return 2 * Vector3D.DotProduct(n, wi) * n - wi;
+        }
     }
 }

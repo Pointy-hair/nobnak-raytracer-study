@@ -13,14 +13,14 @@ using StudyDiffuseShading.Model.Sampler;
 namespace StudyDiffuseShading.Model {
     public class Tracer {
         private Construction construction;
-        private Illumination illumination;
+        private ILight environment;
         private IHemispherecalSampler sampler;
         private int maxDepth;
         private int depth;
 
-        public Tracer(Construction construction, Illumination illumination, IHemispherecalSampler sampler, int maxDepth) {
+        public Tracer(Construction construction, ILight environment, IHemispherecalSampler sampler, int maxDepth) {
             this.construction = construction;
-            this.illumination = illumination;
+            this.environment = environment;
             this.sampler = sampler;
             this.maxDepth = maxDepth;
             this.depth = 0;
@@ -35,10 +35,10 @@ namespace StudyDiffuseShading.Model {
             Triangle target;
             Collision collision;
             if (!construction.findNearest(ray, double.MaxValue, out nearest, out target, out collision))
-                return illumination.ambient.l();
+                return environment.l();
 
             depth++;
-            Vector3D result = target.matter.shadeOnPath(this, sampler, collision);
+            Vector3D result = target.matter.shade(this, sampler, collision);
             depth--;
             return result;
         }
