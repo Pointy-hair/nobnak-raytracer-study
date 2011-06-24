@@ -15,8 +15,12 @@ namespace StudyDiffuseShading.Model.Sampler {
 
         
         public Vector3D sample() {
-            var rand1 = randomer.NextDouble();
-            var rand2 = randomer.NextDouble();
+            double rand1, rand2; 
+
+            lock (randomer) {
+                rand1 = randomer.NextDouble();
+                rand2 = randomer.NextDouble();
+            }
 
             double cosPhi = Math.Cos(2.0 * Math.PI * rand1);
             double sinPhi = Math.Sin(2.0 * Math.PI * rand1);
