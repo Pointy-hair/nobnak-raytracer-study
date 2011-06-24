@@ -9,6 +9,7 @@ using StudyDiffuseShading.Model.Util;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Sampler;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
@@ -17,7 +18,7 @@ namespace StudyDiffuseShading.Model {
 
         private Screen screen;
         private Window window;
-        private Tracer tracer;
+        private Func<Tracer> tracerFactory;
 
 
         public Engine() {
@@ -55,18 +56,93 @@ namespace StudyDiffuseShading.Model {
                 new Vector3D(549.6, 0.0, 559.2),
                 matte));
 
-            // 右面
+            // 照明
+            //343.0 548.8 227.0
+            //343.0 548.8 332.0
+            //213.0 548.8 332.0
+            //213.0 548.8 227.0
+            primitives.add(new Triangle(
+                new Vector3D(343.0, 548, 227.0),
+                new Vector3D(343.0, 548, 332.0),
+                new Vector3D(213.0, 548, 332.0),
+                emitter));
+            primitives.add(new Triangle(
+                new Vector3D(343.0, 548, 227.0),
+                new Vector3D(213.0, 548, 332.0),
+                new Vector3D(213.0, 548, 227.0),
+                emitter));
 
             // 上面
+            //556.0 548.8   0.0
+            //556.0 548.8 559.2
+            //0.0 548.8 559.2
+            //0.0 548.8   0.0
+            primitives.add(new Triangle(
+                new Vector3D(556.0, 548.8, 0.0),
+                new Vector3D(556.0, 548.8, 559.2),
+                new Vector3D(0.0, 548.8, 559.2),
+                matte));
+            primitives.add(new Triangle(
+                new Vector3D(556.0, 548.8, 0.0),
+                new Vector3D(0.0, 548.8, 559.2),
+                new Vector3D(0.0, 548.8, 0.0),
+                matte));
 
             // 背面
+            //549.6   0.0 559.2
+            //0.0   0.0 559.2
+            //0.0 548.8 559.2
+            //556.0 548.8 559.2
+            primitives.add(new Triangle(
+                new Vector3D(549.6, 0.0, 559.2),
+                new Vector3D(0.0, 0.0, 559.2),
+                new Vector3D(0.0, 548.8, 559.2),
+                matte));
+            primitives.add(new Triangle(
+                new Vector3D(549.6, 0.0, 559.2),
+                new Vector3D(0.0, 548.8, 559.2),
+                new Vector3D(556.0, 548.8, 559.2),
+                matte));
 
             // 左面
+            //0.0   0.0 559.2   
+            //0.0   0.0   0.0
+            //0.0 548.8   0.0
+            //0.0 548.8 559.2
+            primitives.add(new Triangle(
+                new Vector3D(0.0, 0.0, 559.2),
+                new Vector3D(0.0, 0.0, 0.0),
+                new Vector3D(0.0, 548.8, 0.0),
+                leftMaterial));
+            primitives.add(new Triangle(
+                new Vector3D(0.0, 0.0, 559.2),
+                new Vector3D(0.0, 548.8, 0.0),
+                new Vector3D(0.0, 548.8, 559.2),
+                leftMaterial));
+
+            // 右面
+            //552.8   0.0   0.0
+            //549.6   0.0 559.2
+            //556.0 548.8 559.2
+            //556.0 548.8   0.0
+            primitives.add(new Triangle(
+                new Vector3D(552.8, 0.0, 0.0),
+                new Vector3D(549.6, 0.0, 559.2),
+                new Vector3D(556.0, 548.8, 559.2),
+                rightMaterial));
+            primitives.add(new Triangle(
+                new Vector3D(552.8, 0.0, 0.0),
+                new Vector3D(556.0, 548.8, 559.2),
+                new Vector3D(556.0, 548.8, 0.0),
+                rightMaterial));
+
 
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, eye);
             var sampler = new SimpleHemispherecalSampler();
-            this.tracer = new Tracer(primitives, new Ambient(0.05, Constant.WHITE), sampler, 10);
+            this.tracerFactory = () => {
+                return new Tracer(primitives, new Ambient(0.05, Constant.WHITE), sampler, 10);
+            };
         }
 
 
@@ -75,18 +151,24 @@ namespace StudyDiffuseShading.Model {
         }
 
         public void render() {
-            int sampleN = 1;
+            int sampleN = 10;
             var sampler = new JitteredSampler(sampleN);
+            Vector3D[] colors = new Vector3D[sampler.Count];
+            Tracer[] tracers = new Tracer[sampler.Count];
+            foreach (var i in Enumerable.Range(0, sampler.Count))
+                tracers[i] = tracerFactory();
 
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {
-                    Vector3D color = new Vector3D();
-                    foreach (var sample in sampler.getSampler()) {
+                    Parallel.ForEach(sampler.getSampler(), (sample, state, i) => {
                         var ray = window.getRay(row + sample.X, column + sample.Y);
-                        color += tracer.traceRay(ray);
-                    }
-                    color /= sampler.Count;
-                    screen.setPixel(row, column, color);
+                        var tracer = tracers[i];
+                        colors[i] = tracer.traceRay(ray);
+                    });
+                    Vector3D sum = new Vector3D();
+                    foreach (var color in colors)
+                        sum += color;
+                    screen.setPixel(row, column, sum / sampler.Count);
 
                 }
             }
