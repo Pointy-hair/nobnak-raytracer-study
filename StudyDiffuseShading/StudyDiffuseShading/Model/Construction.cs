@@ -30,9 +30,9 @@ namespace StudyDiffuseShading.Model {
             IntersectResult result = new IntersectResult();
             foreach (var primitive in primitives) {
                 IntersectResult tmpResult;
-                if (primitive.intersect(ray, out tmpResult) && result.t < nearest) {
+                if (primitive.intersect(ray, out tmpResult) && tmpResult.t < nearest) {
                     result = tmpResult;
-                    nearest = result.t;
+                    nearest = tmpResult.t;
                     target = primitive;
                 }
             }

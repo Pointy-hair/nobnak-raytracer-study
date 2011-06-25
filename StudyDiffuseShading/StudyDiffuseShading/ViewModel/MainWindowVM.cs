@@ -5,6 +5,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using StudyDiffuseShading.Model;
+using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Util;
 
 namespace StudyDiffuseShading.ViewModel {
     public class MainWindowVM : DependencyObject {
@@ -20,7 +22,16 @@ namespace StudyDiffuseShading.ViewModel {
 
 
         public MainWindowVM() {
-            this.engine = new Engine();
+            var eye = new Vector3D(278, 273, 800);
+            var dir = new Vector3D(0, 0, -1);
+            var ybase = new Vector3D(0, 1, 0);
+            var zbase = -dir;
+            var xbase = Vector3D.CrossProduct(ybase, zbase);
+            var rotate = new Matrix3D(xbase.X, xbase.Y, xbase.Z, 0, ybase.X, ybase.Y, ybase.Z, 0, zbase.X, zbase.Y, zbase.Z, 0, 0, 0, 0, 1);
+
+            var camera = Matrix3D.Multiply(rotate, MathUtil.translate(eye));
+
+            this.engine = new Engine(camera);
         }
 
 

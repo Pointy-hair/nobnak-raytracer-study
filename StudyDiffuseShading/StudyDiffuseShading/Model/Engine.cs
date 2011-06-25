@@ -13,136 +13,36 @@ using System.Threading.Tasks;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
+
         private int width = 400;
         private int height = 300;
+        private int sampleN = 10;
+        private int depth = 10;
 
         private Screen screen;
         private Window window;
         private Func<Tracer> tracerFactory;
+        private Matrix3D camera;
 
 
-        public Engine() {
-            Vector3D eye = new Vector3D(278, 273, -800);
-            double scale = 2;
-
+        public Engine(Matrix3D camera) {
             var diffuse = 0.8;
-            var specular = 1.0;
-            var primitives = new Construction();
-
-            IMaterial matte = new Matte(Constant.WHITE, diffuse);
-            IMaterial emitter = new Emissive(Constant.WHITE, 10.0);
-# if false
-            var rightMaterial = new Mirror(specular, Constant.GREEN);
-            var leftMaterial = new Mirror(specular, Constant.RED); 
-# else
-            var rightMaterial = new Matte(Constant.GREEN, diffuse);
-            var leftMaterial = new Matte(Constant.RED, diffuse);
-# endif
-
-            // 下面
-            //white
-            //552.8 0.0   0.0   
-            //  0.0 0.0   0.0
-            //  0.0 0.0 559.2
-            //549.6 0.0 559.2
-            primitives.add(new Triangle(
-                new Vector3D(552.8, 0.0, 0.0),
-                new Vector3D(0.0, 0.0, 0.0),
-                new Vector3D(0.0, 0.0, 559.2),
-                matte));
-            primitives.add(new Triangle(
-                new Vector3D(552.8, 0.0, 0.0),
-                new Vector3D(0.0, 0.0, 559.2),
-                new Vector3D(549.6, 0.0, 559.2),
-                matte));
-
-            // 照明
-            //343.0 548.8 227.0
-            //343.0 548.8 332.0
-            //213.0 548.8 332.0
-            //213.0 548.8 227.0
-            primitives.add(new Triangle(
-                new Vector3D(343.0, 548, 227.0),
-                new Vector3D(343.0, 548, 332.0),
-                new Vector3D(213.0, 548, 332.0),
-                emitter));
-            primitives.add(new Triangle(
-                new Vector3D(343.0, 548, 227.0),
-                new Vector3D(213.0, 548, 332.0),
-                new Vector3D(213.0, 548, 227.0),
-                emitter));
-
-            // 上面
-            //556.0 548.8   0.0
-            //556.0 548.8 559.2
-            //0.0 548.8 559.2
-            //0.0 548.8   0.0
-            primitives.add(new Triangle(
-                new Vector3D(556.0, 548.8, 0.0),
-                new Vector3D(556.0, 548.8, 559.2),
-                new Vector3D(0.0, 548.8, 559.2),
-                matte));
-            primitives.add(new Triangle(
-                new Vector3D(556.0, 548.8, 0.0),
-                new Vector3D(0.0, 548.8, 559.2),
-                new Vector3D(0.0, 548.8, 0.0),
-                matte));
-
-            // 背面
-            //549.6   0.0 559.2
-            //0.0   0.0 559.2
-            //0.0 548.8 559.2
-            //556.0 548.8 559.2
-            primitives.add(new Triangle(
-                new Vector3D(549.6, 0.0, 559.2),
-                new Vector3D(0.0, 0.0, 559.2),
-                new Vector3D(0.0, 548.8, 559.2),
-                matte));
-            primitives.add(new Triangle(
-                new Vector3D(549.6, 0.0, 559.2),
-                new Vector3D(0.0, 548.8, 559.2),
-                new Vector3D(556.0, 548.8, 559.2),
-                matte));
-
-            // 左面
-            //0.0   0.0 559.2   
-            //0.0   0.0   0.0
-            //0.0 548.8   0.0
-            //0.0 548.8 559.2
-            primitives.add(new Triangle(
-                new Vector3D(0.0, 0.0, 559.2),
-                new Vector3D(0.0, 0.0, 0.0),
-                new Vector3D(0.0, 548.8, 0.0),
-                leftMaterial));
-            primitives.add(new Triangle(
-                new Vector3D(0.0, 0.0, 559.2),
-                new Vector3D(0.0, 548.8, 0.0),
-                new Vector3D(0.0, 548.8, 559.2),
-                leftMaterial));
-
-            // 右面
-            //552.8   0.0   0.0
-            //549.6   0.0 559.2
-            //556.0 548.8 559.2
-            //556.0 548.8   0.0
-            primitives.add(new Triangle(
-                new Vector3D(552.8, 0.0, 0.0),
-                new Vector3D(549.6, 0.0, 559.2),
-                new Vector3D(556.0, 548.8, 559.2),
-                rightMaterial));
-            primitives.add(new Triangle(
-                new Vector3D(552.8, 0.0, 0.0),
-                new Vector3D(556.0, 548.8, 559.2),
-                new Vector3D(556.0, 548.8, 0.0),
-                rightMaterial));
+            var scale = 0.2;
+            var distance = 100.0;
+            this.camera = camera;
 
 
             this.screen = new Screen(width, height);
-            this.window = new Window(width, height, scale, eye);
-            var sampler = new SimpleHemispherecalSampler();
+            this.window = new Window(width, height, scale, distance, camera);
+
+            var primitives = new Construction();
+            var seedFactory = new Random();
             this.tracerFactory = () => {
-                return new Tracer(primitives, new Ambient(0.05, Constant.WHITE), sampler, 10);
+                var sampler = new SimpleHemispherecalSampler(seedFactory.Next());
+                return new Tracer(primitives, new Ambient(0.05, Constant.WHITE), sampler, depth);
             };
+
+            ExampleUtil.buildCornelBox(primitives, diffuse);
         }
 
 
@@ -151,7 +51,6 @@ namespace StudyDiffuseShading.Model {
         }
 
         public void render() {
-            int sampleN = 10;
             var sampler = new JitteredSampler(sampleN);
             Vector3D[] colors = new Vector3D[sampler.Count];
             Tracer[] tracers = new Tracer[sampler.Count];
@@ -160,14 +59,22 @@ namespace StudyDiffuseShading.Model {
 
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {
+                    Vector3D sum = new Vector3D();
+#if true
                     Parallel.ForEach(sampler.getSampler(), (sample, state, i) => {
                         var ray = window.getRay(row + sample.X, column + sample.Y);
                         var tracer = tracers[i];
                         colors[i] = tracer.traceRay(ray);
                     });
-                    Vector3D sum = new Vector3D();
                     foreach (var color in colors)
                         sum += color;
+#else
+                    foreach (var sample in sampler.getSampler()) {
+                        var ray = window.getRay(row + sample.X, column + sample.Y);
+                        var tracer = tracers[0];
+                        sum += tracer.traceRay(ray);
+                    }
+#endif
                     screen.setPixel(row, column, sum / sampler.Count);
 
                 }
