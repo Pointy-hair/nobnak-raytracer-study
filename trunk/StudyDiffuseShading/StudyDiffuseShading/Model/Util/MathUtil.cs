@@ -32,5 +32,20 @@ namespace StudyDiffuseShading.Model.Util {
         public static Vector3D reflectDirection(Vector3D n, Vector3D wi) {
             return 2 * Vector3D.DotProduct(n, wi) * n - wi;
         }
+
+        public static Matrix3D translate(Vector3D d) {
+            return new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, d.X, d.Y, d.Z, 1);
+        }
+        public static Matrix3D switchCoordinate(Matrix3D src) {
+            var reflect = new Matrix3D(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+            return Matrix3D.Multiply(src, reflect);
+        }
+
+        public static Vector3D convertToVector(Point3D p) {
+            return new Vector3D(p.X, p.Y, p.Z);
+        }
+        public static Point3D convertToPoint(Vector3D v) {
+            return new Point3D(v.X, v.Y, v.Z);
+        }
     }
 }

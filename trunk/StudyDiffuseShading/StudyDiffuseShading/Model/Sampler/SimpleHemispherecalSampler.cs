@@ -9,18 +9,16 @@ namespace StudyDiffuseShading.Model.Sampler {
         private Random randomer;
 
 
-        public SimpleHemispherecalSampler() {
-            this.randomer = new Random();
+        public SimpleHemispherecalSampler(int seed) {
+            this.randomer = new Random(seed);
         }
 
         
         public Vector3D sample() {
             double rand1, rand2; 
 
-            lock (randomer) {
-                rand1 = randomer.NextDouble();
-                rand2 = randomer.NextDouble();
-            }
+            rand1 = randomer.NextDouble();
+            rand2 = randomer.NextDouble();
 
             double cosPhi = Math.Cos(2.0 * Math.PI * rand1);
             double sinPhi = Math.Sin(2.0 * Math.PI * rand1);

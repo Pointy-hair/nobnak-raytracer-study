@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Util;
 namespace StudyDiffuseShading.Model {
     public class Window {
+        private readonly Point3D DEFAULT_EYE = new Point3D(0, 0, 0);
+
         private int width;
         private int height;
         private double scale;
-        private Vector3D eye;
+        private double distance;
+        private Matrix3D camera;
 
 
-        public Window(int width, int height, double scale, Vector3D eye) {
+        public Window(int width, int height, double scale, double distance, Matrix3D camera) {
             this.scale = scale;
             this.width = width;
             this.height = height;
-            this.eye = eye;
+            this.distance = distance;
+            this.camera = camera;
         }
 
 
@@ -23,7 +28,11 @@ namespace StudyDiffuseShading.Model {
             var screenX = scale * (column - width * 0.5);
             var screenY = scale * ((height - row) - height * 0.5);
 
-            Ray ray = new Ray(eye, new Vector3D(screenX + eye.X, screenY + eye.Y, 0) - eye);
+            var eye = Point3D.Multiply(DEFAULT_EYE, camera);
+            var lookat = new Vector3D(screenX, screenY, -distance);
+            var dir = Vector3D.Multiply(lookat, camera);
+
+            Ray ray = new Ray(MathUtil.convertToVector(eye), dir);
             return ray;
         }
     }
