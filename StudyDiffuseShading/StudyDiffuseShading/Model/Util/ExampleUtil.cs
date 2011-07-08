@@ -10,14 +10,14 @@ namespace StudyDiffuseShading.Model.Util {
     public static class ExampleUtil {
 
         public static void buildCornelBox(Construction primitives, double diffuse) {
-            IMaterial matte = new Matte(Constant.WHITE, diffuse);
+            IMaterial matte = new Matte(diffuse, Constant.WHITE);
             IMaterial emitter = new Emissive(Constant.WHITE, 10.0);
 # if false
             var rightMaterial = new Mirror(specular, Constant.GREEN);
             var leftMaterial = new Mirror(specular, Constant.RED); 
 # else
-            var rightMaterial = new Matte(Constant.GREEN, diffuse);
-            var leftMaterial = new Matte(Constant.RED, diffuse);
+            var rightMaterial = new Matte(diffuse, Constant.GREEN);
+            var leftMaterial = new Matte(diffuse, Constant.RED);
 # endif
 
             // 下面

@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Helper;
 
 namespace StudyDiffuseShading.Model.Sampler {
     public class SimpleHemispherecalSampler : IHemispherecalSampler {
-        private Random randomer;
 
 
-        public SimpleHemispherecalSampler(int seed) {
-            this.randomer = new Random(seed);
+        public SimpleHemispherecalSampler() {
         }
 
         
-        public Vector3D sample() {
-            double rand1, rand2; 
+        public Vector3D sample(IRandomFactory randomFactory) {
+            double rand1, rand2;
+
+            var randomer = randomFactory.makeRandom();
 
             rand1 = randomer.NextDouble();
             rand2 = randomer.NextDouble();

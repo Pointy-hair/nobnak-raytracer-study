@@ -10,16 +10,21 @@ using StudyDiffuseShading.Model.Util;
 
 namespace StudyDiffuseShading.ViewModel {
     public class MainWindowVM : DependencyObject {
+        #region Variables
         public static readonly DependencyProperty ImageProperty = DependencyProperty.Register(
             "Image", typeof(BitmapSource), typeof(MainWindowVM));
         public static readonly DependencyProperty PixelGainProperty = DependencyProperty.Register(
             "PixelGain", typeof(double), typeof(MainWindowVM));
         public static readonly DependencyProperty PixelBiasProperty = DependencyProperty.Register(
             "PixelBias", typeof(double), typeof(MainWindowVM));
+        public static readonly DependencyProperty SampleNumberProperty = DependencyProperty.Register(
+            "SampleNumber", typeof(double), typeof(MainWindowVM), new PropertyMetadata(1.0, (o, e) => {
+                ((MainWindowVM)o).updatedSampleNumber();
+            }));
 
 
         private Engine engine;
-
+        #endregion Variables
 
         public MainWindowVM() {
             var eye = new Vector3D(278, 273, 800);
@@ -40,6 +45,15 @@ namespace StudyDiffuseShading.ViewModel {
             Image = engine.getResult().getImage();
         }
 
+        #region EventHandlers
+        public void updatedSampleNumber() {
+            if (engine == null)
+                return;
+
+            engine.SampleNum = (int)((double)SampleNumber + 0.5);
+        }
+        #endregion EventHandlers
+
 
         # region DependencyProperty
         public BitmapSource Image {
@@ -57,6 +71,10 @@ namespace StudyDiffuseShading.ViewModel {
         public double PixelBias {
             get { return (double)GetValue(PixelBiasProperty); }
             set { SetValue(PixelBiasProperty, value); }
+        }
+        public double SampleNumber {
+            get { return (double)GetValue(SampleNumberProperty); }
+            set { SetValue(SampleNumberProperty, value); }
         }
         # endregion
 

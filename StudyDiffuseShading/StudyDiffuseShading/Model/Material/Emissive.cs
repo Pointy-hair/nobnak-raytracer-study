@@ -5,11 +5,12 @@ using System.Text;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Sampler;
 using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Helper;
 
 namespace StudyDiffuseShading.Model.Material {
     public class Emissive : IMaterial {
-        private Vector3D ce;
-        private double ls;
+        private readonly Vector3D ce;
+        private readonly double ls;
 
 
         public Emissive(Vector3D ce, double ls) {
@@ -18,8 +19,13 @@ namespace StudyDiffuseShading.Model.Material {
         }
 
 
-        public Vector3D shade(Tracer tracer, IHemispherecalSampler sampler, Collision collision) {
-            return ce * ls;
+        public double rho() { return 1; }
+
+        public Vector3D shade(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
+            return ls * shadeDividedRho(tracer, randomFactory, sampler, collision);
+        }
+        public Vector3D shadeDividedRho(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
+            return ce;
         }
     }
 }
