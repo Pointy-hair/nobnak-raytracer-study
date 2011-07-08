@@ -10,14 +10,13 @@ using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Sampler;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using StudyDiffuseShading.Model.Helper;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
-
         private int width = 400;
         private int height = 300;
-        private int sampleN = 10;
-        private int depth = 10;
+        private int sampleN = 1;
 
         private Screen screen;
         private Window window;
@@ -26,8 +25,8 @@ namespace StudyDiffuseShading.Model {
 
 
         public Engine(Matrix3D camera) {
-            var diffuse = 0.8;
-            var scale = 0.2;
+            var diffuse = 0.95;
+            var scale = 0.25;
             var distance = 100.0;
             this.camera = camera;
 
@@ -38,11 +37,34 @@ namespace StudyDiffuseShading.Model {
             var primitives = new Construction();
             var seedFactory = new Random();
             this.tracerFactory = () => {
-                var sampler = new SimpleHemispherecalSampler(seedFactory.Next());
-                return new Tracer(primitives, new Ambient(0.05, Constant.WHITE), sampler, depth);
+                var randomFactory = new RandomFactory();
+                var samplerFactory = new HemiSamplerFactory();
+                return new Tracer(primitives, new Ambient(0.05, Constant.WHITE), randomFactory, samplerFactory);
             };
 
             ExampleUtil.buildCornelBox(primitives, diffuse);
+        }
+
+
+        public int SampleNum {
+            get { return sampleN; }
+            set {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException("SampleNum shoud be positive");
+                sampleN = value;
+            }
+        }
+
+
+        private class HemiSamplerFactory : IHemispherecalSamplerFactory {
+            private IHemispherecalSampler sampler;
+
+            public HemiSamplerFactory() {
+                this.sampler = new SimpleHemispherecalSampler();
+            }
+            public IHemispherecalSampler makeSampler() {
+                return sampler;
+            }
         }
 
 
@@ -53,28 +75,17 @@ namespace StudyDiffuseShading.Model {
         public void render() {
             var sampler = new JitteredSampler(sampleN);
             Vector3D[] colors = new Vector3D[sampler.Count];
-            Tracer[] tracers = new Tracer[sampler.Count];
-            foreach (var i in Enumerable.Range(0, sampler.Count))
-                tracers[i] = tracerFactory();
+            Tracer tracer = tracerFactory();
 
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {
                     Vector3D sum = new Vector3D();
-#if true
                     Parallel.ForEach(sampler.getSampler(), (sample, state, i) => {
                         var ray = window.getRay(row + sample.X, column + sample.Y);
-                        var tracer = tracers[i];
                         colors[i] = tracer.traceRay(ray);
                     });
                     foreach (var color in colors)
                         sum += color;
-#else
-                    foreach (var sample in sampler.getSampler()) {
-                        var ray = window.getRay(row + sample.X, column + sample.Y);
-                        var tracer = tracers[0];
-                        sum += tracer.traceRay(ray);
-                    }
-#endif
                     screen.setPixel(row, column, sum / sampler.Count);
 
                 }

@@ -9,37 +9,37 @@ using StudyDiffuseShading.Model.Primitive;
 using StudyDiffuseShading.Model.Util;
 using StudyDiffuseShading.Model.Lighting;
 using StudyDiffuseShading.Model.Sampler;
+using StudyDiffuseShading.Model.Helper;
 
 namespace StudyDiffuseShading.Model {
     public class Tracer {
         private Construction construction;
         private ILight environment;
+        private IRandomFactory randomFactory;
         private IHemispherecalSampler sampler;
-        private int maxDepth;
-        private int depth;
 
-        public Tracer(Construction construction, ILight environment, IHemispherecalSampler sampler, int maxDepth) {
+        public Tracer(Construction construction, ILight environment, IRandomFactory randomFactory, 
+            IHemispherecalSamplerFactory samplerFactory) 
+        {
             this.construction = construction;
             this.environment = environment;
-            this.sampler = sampler;
-            this.maxDepth = maxDepth;
-            this.depth = 0;
+            this.randomFactory = randomFactory;
+            this.sampler = samplerFactory.makeSampler();
         }
 
 
         public Vector3D traceRay(Ray ray) {
-            if (maxDepth < depth)
-                return Constant.BLACK;
-
             double nearest;
             Triangle target;
             Collision collision;
             if (!construction.findNearest(ray, double.MaxValue, out nearest, out target, out collision))
                 return environment.l();
 
-            depth++;
-            Vector3D result = target.matter.shade(this, sampler, collision);
-            depth--;
+            var random = randomFactory.makeRandom();
+            if (random.NextDouble() > target.matter.rho())
+                return Constant.BLACK;
+
+            Vector3D result = target.matter.shadeDividedRho(this, randomFactory, sampler, collision);
             return result;
         }
     }

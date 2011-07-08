@@ -71,12 +71,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\BRDF\IBRDF.cs" />
+    <Compile Include="Model\Helper\RandomFactory.cs" />
     <Compile Include="Model\Material\Emissive.cs" />
     <Compile Include="Model\Material\IMaterial.cs" />
     <Compile Include="Model\Material\Mirror.cs" />
     <Compile Include="Model\Sampler\IHemispherecalSampler.cs" />
-    <Compile Include="Model\BRDF\Lambertian.cs" />
     <Compile Include="Model\Construction.cs" />
     <Compile Include="Model\Engine.cs" />
     <Compile Include="Model\Intersect\IntersectResult.cs" />
@@ -94,6 +93,7 @@
     <Compile Include="Model\Sampler\SimpleHemispherecalSampler.cs" />
     <Compile Include="Model\Screen.cs" />
     <Compile Include="Model\Util\MathUtil.cs" />
+    <Compile Include="Model\Util\RandomUtil.cs" />
     <Compile Include="Model\Util\SamplerUtil.cs" />
     <Compile Include="Model\Util\ExampleUtil.cs" />
     <Compile Include="Model\Window.cs" />
@@ -120,6 +120,7 @@
       <SubType>Code</SubType>
     </Compile>
     <AppDesigner Include="Properties\" />
+    <None Include="app.config" />
     <None Include="Application.ico">
       <Visible>false</Visible>
     </None>

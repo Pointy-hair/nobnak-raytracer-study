@@ -5,9 +5,12 @@ using System.Text;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Sampler;
 using StudyDiffuseShading.Model.Primitive;
+using StudyDiffuseShading.Model.Helper;
 
 namespace StudyDiffuseShading.Model.Material {
     public interface IMaterial {
-        Vector3D shade(Tracer tracer, IHemispherecalSampler sampler, Collision collision);
+        double rho();
+        Vector3D shade(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision);
+        Vector3D shadeDividedRho(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision);
     }
 }

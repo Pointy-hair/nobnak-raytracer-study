@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Helper;
 
 namespace StudyDiffuseShading.Model.Sampler {
     public class ConstantSampler : IHemispherecalSampler {
@@ -15,7 +16,7 @@ namespace StudyDiffuseShading.Model.Sampler {
         }
 
 
-        public Vector3D sample() {
+        public Vector3D sample(IRandomFactory randomFactory) {
             return wi;
         }
     }
