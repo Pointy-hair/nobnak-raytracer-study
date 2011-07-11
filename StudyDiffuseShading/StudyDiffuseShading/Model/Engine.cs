@@ -25,6 +25,7 @@ namespace StudyDiffuseShading.Model {
 
 
         public Engine(Matrix3D camera) {
+            var ambient = 0.01;
             var diffuse = 0.95;
             var scale = 0.25;
             var distance = 100.0;
@@ -35,17 +36,18 @@ namespace StudyDiffuseShading.Model {
             this.window = new Window(width, height, scale, distance, camera);
 
             var primitives = new Construction();
+            var illumination = new Illumination();
             var seedFactory = new Random();
             this.tracerFactory = () => {
                 var randomFactory = new RandomFactory();
                 var samplerFactory = new HemiSamplerFactory();
-                return new Tracer(primitives, new Ambient(0.05, Constant.WHITE), randomFactory, samplerFactory);
+                return new Tracer(primitives, new Emissive(Constant.WHITE, ambient, 1.0), randomFactory, samplerFactory);
             };
 
-            ExampleUtil.buildCornelBox(primitives, diffuse);
+            ExampleUtil.buildCornelBox(primitives, illumination, diffuse);
         }
 
-
+        #region Properties
         public int SampleNum {
             get { return sampleN; }
             set {
@@ -54,6 +56,7 @@ namespace StudyDiffuseShading.Model {
                 sampleN = value;
             }
         }
+        #endregion
 
 
         private class HemiSamplerFactory : IHemispherecalSamplerFactory {
