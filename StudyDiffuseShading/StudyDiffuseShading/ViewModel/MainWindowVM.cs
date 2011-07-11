@@ -21,6 +21,10 @@ namespace StudyDiffuseShading.ViewModel {
             "SampleNumber", typeof(double), typeof(MainWindowVM), new PropertyMetadata(1.0, (o, e) => {
                 ((MainWindowVM)o).updatedSampleNumber();
             }));
+        public static readonly DependencyProperty ImageWidthProperty = DependencyProperty.Register(
+            "ImageWidth", typeof(int), typeof(MainWindowVM), new PropertyMetadata(100));
+        public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
+            "ImageHeight", typeof(int), typeof(MainWindowVM), new PropertyMetadata(100));
 
 
         private Engine engine;
@@ -40,7 +44,9 @@ namespace StudyDiffuseShading.ViewModel {
         }
 
 
-        public void render(int width, int height) {
+        public void render() {
+            engine.Width = ImageWidth;
+            engine.Height = ImageHeight;
             engine.render();
             Image = engine.getResult().getImage();
         }
@@ -75,6 +81,14 @@ namespace StudyDiffuseShading.ViewModel {
         public double SampleNumber {
             get { return (double)GetValue(SampleNumberProperty); }
             set { SetValue(SampleNumberProperty, value); }
+        }
+        public int ImageWidth {
+            get { return (int)GetValue(ImageWidthProperty); }
+            set { SetValue(ImageWidthProperty, value); }
+        }
+        public int ImageHeight {
+            get { return (int)GetValue(ImageHeightProperty); }
+            set { SetValue(ImageHeightProperty, value); }
         }
         # endregion
 

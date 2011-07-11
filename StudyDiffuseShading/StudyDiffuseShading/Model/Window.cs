@@ -17,16 +17,21 @@ namespace StudyDiffuseShading.Model {
 
         public Window(int width, int height, double scale, double distance, Matrix3D camera) {
             this.scale = scale;
-            this.width = width;
-            this.height = height;
+            setSize(width, height);
             this.distance = distance;
             this.camera = camera;
         }
 
+        public void setSize(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
 
         public Ray getRay(double row, double column) {
-            var screenX = scale * (column - width * 0.5);
-            var screenY = scale * ((height - row) - height * 0.5);
+            var ratio = (double)height / width;
+            var screenX = scale * (column / width - 0.5);
+            var screenY = scale * ((height - row) / height - 0.5) * ratio;
 
             var eye = Point3D.Multiply(DEFAULT_EYE, camera);
             var lookat = new Vector3D(screenX, screenY, -distance);
