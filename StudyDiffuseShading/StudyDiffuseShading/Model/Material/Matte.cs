@@ -47,7 +47,9 @@ namespace StudyDiffuseShading.Model.Material {
         }
 
         private Vector3D shadeDirectTerm(Vector3D pointIlluminated, Vector3D normalIlluminated) {
-            return lights.sampleALight(pointIlluminated, normalIlluminated);
+            Vector3D wi;
+            var le = lights.LeALight(pointIlluminated, normalIlluminated, out wi);
+            return MathUtil.multiply(cacheF, le) * Vector3D.DotProduct(normalIlluminated, wi);
         }
         private Vector3D shadeIndirectTerm(ref Collision collision) {
             var random = randomFactory.makeRandom();
