@@ -25,9 +25,9 @@ namespace StudyDiffuseShading.Model {
 
 
         public Engine(Matrix3D camera) {
-            var ambient = 0.01;
+            var ambient = 0.00;
             var diffuse = 0.95;
-            var scale = 0.25;
+            var scale = 100;
             var distance = 100.0;
             this.camera = camera;
 
@@ -51,12 +51,34 @@ namespace StudyDiffuseShading.Model {
             get { return sampleN; }
             set {
                 if (value <= 0)
-                    throw new ArgumentOutOfRangeException("SampleNum shoud be positive");
+                    throw new ArgumentOutOfRangeException("SampleNum must be positive");
                 sampleN = value;
+            }
+        }
+        public int Width {
+            get { return width; }
+            set {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException("Width must be positive");
+                width = value;
+                setSize(width, height);
+            }
+        }
+        public int Height {
+            get { return height; }
+            set {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException("Height must be positive");
+                height = value;
+                setSize(width, height);
             }
         }
         #endregion
 
+        private void setSize(int width, int height) {
+            screen.setSize(width, height);
+            window.setSize(width, height);
+        }
 
         private class HemiSamplerFactory : IHemispherecalSamplerFactory {
             private IHemispherecalSampler sampler;

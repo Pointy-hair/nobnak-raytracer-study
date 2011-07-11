@@ -33,7 +33,7 @@ namespace StudyDiffuseShading
 
 		private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-            model.render((int) imageRendered.Width, (int) imageRendered.Height);
+            model.render();
 		}
 	}
 }
