@@ -16,6 +16,7 @@ namespace StudyDiffuseShading.Model.Primitive {
         public readonly IMaterial matter;
 
         public readonly double area;
+        public readonly int cacheHashCode;
 
         private RayTriangleIntersect intersectAlgorithm;
 
@@ -32,6 +33,7 @@ namespace StudyDiffuseShading.Model.Primitive {
             this.c = c;
             this.matter = matter;
             this.area = Vector3D.CrossProduct(b.position - a.position, c.position - a.position).Length * 0.5;
+            this.cacheHashCode = generateHash(a, b, c);
 
             this.intersectAlgorithm = IntersectFactory.makeRayTriangleIntersect();
         }
@@ -46,5 +48,18 @@ namespace StudyDiffuseShading.Model.Primitive {
             normal.Normalize();
             return normal;
         }
+
+        #region Overrides
+        public override int GetHashCode() {
+            return cacheHashCode;
+        }
+        private static int generateHash(Vertex a, Vertex b, Vertex c) {
+            var result = a.position.GetHashCode();
+            var mod = 53;
+            result = result * mod + b.position.GetHashCode();
+            result = result * mod + c.position.GetHashCode();
+            return result;
+        }
+        #endregion Overrides
     }
 }

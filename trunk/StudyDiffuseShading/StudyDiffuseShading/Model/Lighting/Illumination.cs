@@ -27,7 +27,7 @@ namespace StudyDiffuseShading.Model.Lighting {
             lights.Add(aLight);
         }
 
-        public Vector3D sampleALight(Vector3D pointIlluminated, Vector3D normalIllumianted) {
+        public Vector3D LeALight(Vector3D pointIlluminated, Vector3D normalIlluminated, out Vector3D wi) {
             var random = randomFactory.makeRandom();
 
             var indexLight = (int)(lights.Count * random.NextDouble());
@@ -38,8 +38,19 @@ namespace StudyDiffuseShading.Model.Lighting {
             var vecR = pointIlluminated - sampleResult.p;
             var r = vecR.Length;
             var wo = vecR / r;
+            wi = -wo;
+            
+            double nearest;
+            Triangle hitTarget;
+            Collision collision;
+            var ray = new Ray(pointIlluminated, wi);
+            if (!primitives.findNearest(ray, r, out nearest, out hitTarget, out collision) || !triangle.Equals(hitTarget))
+                return Constant.BLACK;
+            
+            var le = triangle.matter.shade(new Collision(sampleResult.p, wo, normalLight));
 
-            return Constant.BLACK;
+            return lights.Count * le * Vector3D.DotProduct(normalLight, wo) * triangle.area / (r * r);
         }
     }
+
 }

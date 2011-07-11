@@ -16,7 +16,7 @@ namespace StudyDiffuseShading.Model.Sampler {
         }
 
 
-        public SampleResult sample(Triangle triangle) {
+        public SamplePoint sample(Triangle triangle) {
             var random = randomFactory.makeRandom();
             var s = random.NextDouble();
             var t = random.NextDouble();
@@ -26,16 +26,16 @@ namespace StudyDiffuseShading.Model.Sampler {
             var u = sqrtT * (1 - s);
             var v = s * sqrtT;
             var p = (1 - sqrtT) * triangle.a.position + u * triangle.b.position + v * triangle.c.position;
-            return new SampleResult(p, u, v);
+            return new SamplePoint(p, u, v);
         }
     }
 
-    public struct SampleResult {
+    public struct SamplePoint {
         public readonly Vector3D p;
         public readonly double u;
         public readonly double v;
 
-        public SampleResult(Vector3D p, double u, double v) {
+        public SamplePoint(Vector3D p, double u, double v) {
             this.p = p;
             this.u = u;
             this.v = v;
