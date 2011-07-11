@@ -39,9 +39,9 @@ namespace StudyDiffuseShading.Model {
             Triangle target;
             Collision collision;
             if (!construction.findNearest(ray, double.MaxValue, out nearest, out target, out collision))
-                return ambient.shade(this, randomFactory, sampler, collision);
+                return ambient.shade(collision);
 
-            Vector3D result = target.matter.shade(this, randomFactory, sampler, collision);
+            Vector3D result = target.matter.shade(collision);
             return result;
         }
     }

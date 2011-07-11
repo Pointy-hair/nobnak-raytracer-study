@@ -20,7 +20,7 @@ namespace StudyDiffuseShading.Model {
 
         private Screen screen;
         private Window window;
-        private Func<Tracer> tracerFactory;
+        private Tracer tracer;
         private Matrix3D camera;
 
 
@@ -35,16 +35,15 @@ namespace StudyDiffuseShading.Model {
             this.screen = new Screen(width, height);
             this.window = new Window(width, height, scale, distance, camera);
 
+            var randomFactory = new RandomFactory();
+            var hemiSamplerFactory = new HemiSamplerFactory();
+            var triangleSampler = new TriangleSampler(randomFactory);
             var primitives = new Construction();
-            var illumination = new Illumination();
+            var illumination = new Illumination(primitives, randomFactory, triangleSampler);
             var seedFactory = new Random();
-            this.tracerFactory = () => {
-                var randomFactory = new RandomFactory();
-                var samplerFactory = new HemiSamplerFactory();
-                return new Tracer(primitives, new Emissive(Constant.WHITE, ambient, 1.0), randomFactory, samplerFactory);
-            };
+            this.tracer = new Tracer(primitives, new Emissive(Constant.WHITE, ambient, 1.0), randomFactory, hemiSamplerFactory);
 
-            ExampleUtil.buildCornelBox(primitives, illumination, diffuse);
+            ExampleUtil.buildCornelBox(primitives, illumination, diffuse, tracer, randomFactory, hemiSamplerFactory);
         }
 
         #region Properties
@@ -78,7 +77,6 @@ namespace StudyDiffuseShading.Model {
         public void render() {
             var sampler = new JitteredSampler(sampleN);
             Vector3D[] colors = new Vector3D[sampler.Count];
-            Tracer tracer = tracerFactory();
 
             for (int row = 0; row < height; row++) {
                 for (int column = 0; column < width; column++) {

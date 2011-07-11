@@ -88,6 +88,7 @@
     <Compile Include="Model\Sampler\ConstantSampler.cs" />
     <Compile Include="Model\Sampler\JitteredSampler.cs" />
     <Compile Include="Model\Sampler\SimpleHemispherecalSampler.cs" />
+    <Compile Include="Model\Sampler\TriangleSampler.cs" />
     <Compile Include="Model\Screen.cs" />
     <Compile Include="Model\Util\MathUtil.cs" />
     <Compile Include="Model\Util\RandomUtil.cs" />

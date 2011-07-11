@@ -6,19 +6,22 @@ using StudyDiffuseShading.Model.Material;
 using StudyDiffuseShading.Model.Primitive;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Lighting;
+using StudyDiffuseShading.Model.Helper;
+using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model.Util {
     public static class ExampleUtil {
 
-        public static void buildCornelBox(Construction primitives, Illumination illumination, double diffuse) {
-            IMaterial matte = new Matte(diffuse, Constant.WHITE);
+        public static void buildCornelBox(Construction primitives, Illumination lights, double diffuse, 
+            Tracer tracer, IRandomFactory randomFactory, IHemispherecalSamplerFactory hemiSamplerFactory) {
+            IMaterial matte = new Matte(diffuse, Constant.WHITE, primitives, lights, tracer, randomFactory, hemiSamplerFactory);
             IMaterial emitter = new Emissive(Constant.WHITE, 1.0, 50.0);
 # if false
             var rightMaterial = new Mirror(specular, Constant.GREEN);
             var leftMaterial = new Mirror(specular, Constant.RED); 
 # else
-            var rightMaterial = new Matte(diffuse, Constant.GREEN);
-            var leftMaterial = new Matte(diffuse, Constant.RED);
+            var rightMaterial = new Matte(diffuse, Constant.GREEN, primitives, lights, tracer, randomFactory, hemiSamplerFactory);
+            var leftMaterial = new Matte(diffuse, Constant.RED, primitives, lights, tracer, randomFactory, hemiSamplerFactory);
 # endif
 
             // 下面
@@ -52,14 +55,14 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(343.0, 548, -332.0),
                 emitter);
             primitives.add(light1);
-            illumination.addLight(light1);
+            lights.addLight(light1);
             var light2 = new Triangle(
                 new Vector3D(343.0, 548, -227.0),
                 new Vector3D(213.0, 548, -227.0),
                 new Vector3D(213.0, 548, -332.0),
                 emitter);
             primitives.add(light2);
-            illumination.addLight(light2);
+            lights.addLight(light2);
             #endregion Light
 
             // 上面

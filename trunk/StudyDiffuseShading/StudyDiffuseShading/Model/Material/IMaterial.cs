@@ -10,7 +10,7 @@ using StudyDiffuseShading.Model.Helper;
 namespace StudyDiffuseShading.Model.Material {
     public interface IMaterial {
         double rho();
-        Vector3D shade(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision);
-        Vector3D shadeDividedRho(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision);
+        Vector3D shade(Collision collision);
+        Vector3D shadeDividedRho(Collision collision);
     }
 }
