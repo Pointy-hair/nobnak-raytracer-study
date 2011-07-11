@@ -25,7 +25,12 @@ namespace StudyDiffuseShading.Model.Material {
         public double rho() { return kd; }
 
         public Vector3D shade(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
-            return kd * shadeDividedRho(tracer, randomFactory, sampler, collision);
+            var random = randomFactory.makeRandom();
+            var threthold = rho();
+            if (random.NextDouble() >= threthold)
+                return Constant.BLACK;
+
+            return shadeDividedRho(tracer, randomFactory, sampler, collision);
         }
         public Vector3D shadeDividedRho(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
             Vector3D wi = SamplerUtil.sampleWi(collision.normal, sampler, randomFactory);

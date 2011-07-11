@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using StudyDiffuseShading.Model.Primitive;
 
 namespace StudyDiffuseShading.Model.Lighting {
     public class Illumination {
-        public readonly Ambient ambient;
-        public readonly List<ILight> lights;
+        public readonly List<Triangle> lights;
 
 
-        public Illumination(Ambient ambient) {
-            this.ambient = ambient;
-            this.lights = new List<ILight>();
+        public Illumination() {
+            this.lights = new List<Triangle>();
         }
 
-        public void addLight(ILight aLight) {
+        public void addLight(Triangle aLight) {
             lights.Add(aLight);
         }
     }

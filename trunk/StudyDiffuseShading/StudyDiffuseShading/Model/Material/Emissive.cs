@@ -10,22 +10,24 @@ using StudyDiffuseShading.Model.Helper;
 namespace StudyDiffuseShading.Model.Material {
     public class Emissive : IMaterial {
         private readonly Vector3D ce;
-        private readonly double ls;
+        private readonly double le;
+        private readonly double watte;
 
 
-        public Emissive(Vector3D ce, double ls) {
+        public Emissive(Vector3D ce, double le, double watte) {
             this.ce = ce;
-            this.ls = ls;
+            this.le = le;
+            this.watte = watte;
         }
 
 
-        public double rho() { return 1; }
+        public double rho() { return 0; }
 
         public Vector3D shade(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
-            return ls * shadeDividedRho(tracer, randomFactory, sampler, collision);
+            return le * ce * watte;
         }
         public Vector3D shadeDividedRho(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
-            return ce;
+            throw new NotSupportedException();
         }
     }
 }

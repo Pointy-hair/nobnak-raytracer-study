@@ -5,13 +5,14 @@ using System.Text;
 using StudyDiffuseShading.Model.Material;
 using StudyDiffuseShading.Model.Primitive;
 using System.Windows.Media.Media3D;
+using StudyDiffuseShading.Model.Lighting;
 
 namespace StudyDiffuseShading.Model.Util {
     public static class ExampleUtil {
 
-        public static void buildCornelBox(Construction primitives, double diffuse) {
+        public static void buildCornelBox(Construction primitives, Illumination illumination, double diffuse) {
             IMaterial matte = new Matte(diffuse, Constant.WHITE);
-            IMaterial emitter = new Emissive(Constant.WHITE, 10.0);
+            IMaterial emitter = new Emissive(Constant.WHITE, 1.0, 50.0);
 # if false
             var rightMaterial = new Mirror(specular, Constant.GREEN);
             var leftMaterial = new Mirror(specular, Constant.RED); 
@@ -45,16 +46,20 @@ namespace StudyDiffuseShading.Model.Util {
             //343.0 548.8 332.0
             //213.0 548.8 332.0
             //213.0 548.8 227.0
-            primitives.add(new Triangle(
+            var light1 = new Triangle(
                 new Vector3D(343.0, 548, -227.0),
                 new Vector3D(213.0, 548, -332.0),
                 new Vector3D(343.0, 548, -332.0),
-                emitter));
-            primitives.add(new Triangle(
+                emitter);
+            primitives.add(light1);
+            illumination.addLight(light1);
+            var light2 = new Triangle(
                 new Vector3D(343.0, 548, -227.0),
                 new Vector3D(213.0, 548, -227.0),
                 new Vector3D(213.0, 548, -332.0),
-                emitter));
+                emitter);
+            primitives.add(light2);
+            illumination.addLight(light2);
             #endregion Light
 
             // 上面
@@ -130,7 +135,6 @@ namespace StudyDiffuseShading.Model.Util {
             #endregion Right
 
             // 小さい箱
-#if true
             #region SmallBox
             //130.0 165.0  65.0
             // 82.0 165.0 225.0
@@ -207,7 +211,6 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(82.0, 165.0, -225.0),
                 matte));
             #endregion SmallBox
-#endif
 
             // 大きい箱
             #region BigBox
