@@ -15,6 +15,8 @@ namespace StudyDiffuseShading.Model.Primitive {
         public readonly Vertex c;
         public readonly IMaterial matter;
 
+        public readonly double area;
+
         private RayTriangleIntersect intersectAlgorithm;
 
 
@@ -29,6 +31,7 @@ namespace StudyDiffuseShading.Model.Primitive {
             this.b = b;
             this.c = c;
             this.matter = matter;
+            this.area = Vector3D.CrossProduct(b.position - a.position, c.position - a.position).Length * 0.5;
 
             this.intersectAlgorithm = IntersectFactory.makeRayTriangleIntersect();
         }

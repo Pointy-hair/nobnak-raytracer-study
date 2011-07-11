@@ -13,21 +13,23 @@ namespace StudyDiffuseShading.Model.Material {
         private readonly double kr;
         private readonly Vector3D cr;
         private readonly Vector3D cacheRho;
+        private readonly Tracer tracer;
 
         
-        public Mirror(double kr, Vector3D cr) {
+        public Mirror(double kr, Vector3D cr, Tracer tracer) {
             this.kr = kr;
             this.cr = cr;
             this.cacheRho = kr * cr;
+            this.tracer = tracer;
         }
 
 
         public double rho() { return kr; }
 
-        public Vector3D shade(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
-            return kr * shadeDividedRho(tracer, randomFactory, sampler, collision);
+        public Vector3D shade(Collision collision) {
+            return kr * shadeDividedRho(collision);
         }
-         public Vector3D shadeDividedRho(Tracer tracer, IRandomFactory randomFactory, IHemispherecalSampler sampler, Collision collision) {
+         public Vector3D shadeDividedRho(Collision collision) {
             var wi = MathUtil.reflectDirection(collision.normal, collision.wo);
             return MathUtil.multiply(cacheRho, tracer.traceRay(new Ray(collision.point, wi)));
         }
