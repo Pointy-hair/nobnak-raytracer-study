@@ -72,6 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\Helper\RandomFactory.cs" />
+    <Compile Include="Model\Lighting\IIllumination.cs" />
     <Compile Include="Model\Material\Emissive.cs" />
     <Compile Include="Model\Material\IMaterial.cs" />
     <Compile Include="Model\Material\Mirror.cs" />

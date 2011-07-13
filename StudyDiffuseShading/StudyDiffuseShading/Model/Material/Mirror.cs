@@ -24,8 +24,11 @@ namespace StudyDiffuseShading.Model.Material {
         }
 
 
+        #region Interface IMaterial
         public double rho() { return kr; }
-
+        public Vector3D getLe(Collision collision) {
+            return new Vector3D();
+        }
         public Vector3D shade(Collision collision) {
             return kr * shadeDividedRho(collision);
         }
@@ -33,5 +36,6 @@ namespace StudyDiffuseShading.Model.Material {
             var wi = MathUtil.reflectDirection(collision.normal, collision.wo);
             return MathUtil.multiply(cacheRho, tracer.traceRay(new Ray(collision.point, wi)));
         }
-   }
+        #endregion Interface IMaterial
+    }
 }

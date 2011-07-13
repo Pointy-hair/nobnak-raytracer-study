@@ -12,17 +12,12 @@ using StudyDiffuseShading.Model.Sampler;
 namespace StudyDiffuseShading.Model.Util {
     public static class ExampleUtil {
 
-        public static void buildCornelBox(Construction primitives, Illumination lights, double diffuse, 
+        public static void buildCornelBox(Construction primitives, IIllumination lights, double diffuse, 
             Tracer tracer, IRandomFactory randomFactory, IHemispherecalSamplerFactory hemiSamplerFactory) {
             IMaterial matte = new Matte(diffuse, Constant.WHITE, primitives, lights, tracer, randomFactory, hemiSamplerFactory);
             IMaterial emitter = new Emissive(Constant.WHITE, 1.0, 50.0);
-# if false
-            var rightMaterial = new Mirror(specular, Constant.GREEN);
-            var leftMaterial = new Mirror(specular, Constant.RED); 
-# else
             var rightMaterial = new Matte(diffuse, Constant.GREEN, primitives, lights, tracer, randomFactory, hemiSamplerFactory);
             var leftMaterial = new Matte(diffuse, Constant.RED, primitives, lights, tracer, randomFactory, hemiSamplerFactory);
-# endif
 
             // 下面
             #region Floor

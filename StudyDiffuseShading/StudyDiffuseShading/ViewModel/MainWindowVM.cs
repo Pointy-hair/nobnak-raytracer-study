@@ -7,10 +7,11 @@ using System.Windows.Media.Imaging;
 using StudyDiffuseShading.Model;
 using System.Windows.Media.Media3D;
 using StudyDiffuseShading.Model.Util;
+using Microsoft.Win32;
 
 namespace StudyDiffuseShading.ViewModel {
     public class MainWindowVM : DependencyObject {
-        #region Variables
+        #region DependencyRegister
         public static readonly DependencyProperty ImageProperty = DependencyProperty.Register(
             "Image", typeof(BitmapSource), typeof(MainWindowVM));
         public static readonly DependencyProperty PixelGainProperty = DependencyProperty.Register(
@@ -25,10 +26,13 @@ namespace StudyDiffuseShading.ViewModel {
             "ImageWidth", typeof(int), typeof(MainWindowVM), new PropertyMetadata(100));
         public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
             "ImageHeight", typeof(int), typeof(MainWindowVM), new PropertyMetadata(100));
+        #endregion DependencyRegister
 
+        #region Fields
+        private const string IMAGE_EXT_FILTER = "PNG images (*.png)|*.png";
 
         private Engine engine;
-        #endregion Variables
+        #endregion Fields
 
         public MainWindowVM() {
             var eye = new Vector3D(278, 273, 800);
@@ -50,6 +54,20 @@ namespace StudyDiffuseShading.ViewModel {
             engine.render();
             Image = engine.getResult().getImage();
         }
+        public void save() {
+            var dialog = new SaveFileDialog();
+            dialog.Filter = IMAGE_EXT_FILTER;
+            dialog.RestoreDirectory = true;
+            if (dialog.ShowDialog() != true || String.IsNullOrEmpty(dialog.FileName))
+                return;
+
+            using (var stream = dialog.OpenFile()) {
+                var bitmapSource = engine.getResult().getImage();
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(stream);
+            }
+        }
 
         #region EventHandlers
         public void updatedSampleNumber() {
@@ -61,7 +79,7 @@ namespace StudyDiffuseShading.ViewModel {
         #endregion EventHandlers
 
 
-        # region DependencyProperty
+        # region DependencyProperties
         public BitmapSource Image {
             get {
                 return (BitmapSource) GetValue(ImageProperty);
@@ -90,7 +108,9 @@ namespace StudyDiffuseShading.ViewModel {
             get { return (int)GetValue(ImageHeightProperty); }
             set { SetValue(ImageHeightProperty, value); }
         }
-        # endregion
+        # endregion DependencyProperties
 
+        #region Properties
+        #endregion Properties
     }
 }

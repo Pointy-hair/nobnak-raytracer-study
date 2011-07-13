@@ -11,16 +11,17 @@ namespace StudyDiffuseShading.Model.Material {
         private readonly double kd;
         private readonly Vector3D colorDiffuse;
         private Construction primitives;
-        private Illumination lights;
+        private IIllumination lights;
         private Tracer tracer;
         private IRandomFactory randomFactory;
         private IHemispherecalSamplerFactory hemiSamplerFactory;
 
         private Vector3D cacheRho;
         private Vector3D cacheF;
+        private Func<Triangle, bool> lightFilter;
 
 
-        public Matte(double kd, Vector3D cd, Construction primitives, Illumination lights, 
+        public Matte(double kd, Vector3D cd, Construction primitives, IIllumination lights, 
             Tracer tracer, IRandomFactory randomFactory, IHemispherecalSamplerFactory hemiSamplerFactory) {
             this.kd = kd;
             this.colorDiffuse = cd;
@@ -32,11 +33,15 @@ namespace StudyDiffuseShading.Model.Material {
 
             this.cacheRho = kd * cd;
             this.cacheF = Constant.INV_PI * cacheRho;
+            this.lightFilter = (t) => lights.hasLight(t);
         }
 
 
+        #region Interface IMaterial
         public double rho() { return kd; }
-
+        public Vector3D getLe(Collision collision) {
+            return new Vector3D();
+        }
         public Vector3D shade(Collision collision) {
             Vector3D result = Constant.BLACK;
 
@@ -45,11 +50,23 @@ namespace StudyDiffuseShading.Model.Material {
 
             return result;
         }
+        public Vector3D shadeDividedRho(Collision collision) {
+            var hemiSampler = hemiSamplerFactory.makeSampler();
+            Vector3D wi = SamplerUtil.sampleWi(collision.normal, hemiSampler, randomFactory);
+            Vector3D li = tracer.traceRay(new Ray(collision.point, wi), lightFilter);
+
+            return MathUtil.multiply(colorDiffuse, li);
+        }
+        #endregion Interface IMaterial
 
         private Vector3D shadeDirectTerm(Vector3D pointIlluminated, Vector3D normalIlluminated) {
             Vector3D wi;
             var le = lights.LeALight(pointIlluminated, normalIlluminated, out wi);
-            return MathUtil.multiply(cacheF, le) * Vector3D.DotProduct(normalIlluminated, wi);
+            var coswi = Vector3D.DotProduct(normalIlluminated, wi);
+            if (coswi <= Constant.EPSILON)
+                return Constant.BLACK;
+
+            return MathUtil.multiply(cacheF, le) * coswi;
         }
         private Vector3D shadeIndirectTerm(ref Collision collision) {
             var random = randomFactory.makeRandom();
@@ -58,13 +75,6 @@ namespace StudyDiffuseShading.Model.Material {
                 return Constant.BLACK;
 
             return shadeDividedRho(collision);
-        }
-        public Vector3D shadeDividedRho(Collision collision) {
-            var hemiSampler = hemiSamplerFactory.makeSampler();
-            Vector3D wi = SamplerUtil.sampleWi(collision.normal, hemiSampler, randomFactory);
-            Vector3D li = tracer.traceRay(new Ray(collision.point, wi));
-
-            return MathUtil.multiply(colorDiffuse, li);
         }
     }
 }

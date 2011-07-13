@@ -14,8 +14,8 @@ using StudyDiffuseShading.Model.Helper;
 
 namespace StudyDiffuseShading.Model {
     public class Engine {
-        private int width = 400;
-        private int height = 300;
+        private int width = 100;
+        private int height = 100;
         private int sampleN = 1;
 
         private Screen screen;
@@ -27,7 +27,7 @@ namespace StudyDiffuseShading.Model {
         public Engine(Matrix3D camera) {
             var ambient = 0.00;
             var diffuse = 0.95;
-            var scale = 100;
+            var scale = 75;
             var distance = 100.0;
             this.camera = camera;
 
@@ -40,6 +40,7 @@ namespace StudyDiffuseShading.Model {
             var triangleSampler = new TriangleSampler(randomFactory);
             var primitives = new Construction();
             var illumination = new Illumination(primitives, randomFactory, triangleSampler);
+
             var seedFactory = new Random();
             this.tracer = new Tracer(primitives, new Emissive(Constant.WHITE, ambient, 1.0), randomFactory, hemiSamplerFactory);
 
@@ -105,7 +106,7 @@ namespace StudyDiffuseShading.Model {
                     Vector3D sum = new Vector3D();
                     Parallel.ForEach(sampler.getSampler(), (sample, state, i) => {
                         var ray = window.getRay(row + sample.X, column + sample.Y);
-                        colors[i] = tracer.traceRay(ray);
+                        colors[i] = tracer.traceFirstRay(ray);
                     });
                     foreach (var color in colors)
                         sum += color;
