@@ -35,5 +35,9 @@ namespace StudyDiffuseShading
 		{
             model.render();
 		}
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e) {
+            model.save();
+        }
 	}
 }

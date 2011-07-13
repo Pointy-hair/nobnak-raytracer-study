@@ -21,13 +21,20 @@ namespace StudyDiffuseShading.Model.Material {
         }
 
 
+        #region Interface IMaterial
         public double rho() { return 0; }
 
-        public Vector3D shade(Collision collision) {
+        public Vector3D getLe(Collision collision) {
             return le * ce * watte;
+            //return new Vector3D();
+        }
+        public Vector3D shade(Collision collision) {
+            //return le * ce * watte;
+            return new Vector3D();
         }
         public Vector3D shadeDividedRho(Collision collision) {
             throw new NotSupportedException();
         }
+        #endregion Interface IMaterial
     }
 }

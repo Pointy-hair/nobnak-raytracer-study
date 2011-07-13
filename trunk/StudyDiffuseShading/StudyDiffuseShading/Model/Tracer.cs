@@ -18,6 +18,7 @@ namespace StudyDiffuseShading.Model {
         private IRandomFactory randomFactory;
         private IHemispherecalSampler sampler;
         private double maxRadiance;
+        private readonly Func<Triangle, bool> DEFAULT_FILTER;
 
         public Tracer(Construction construction, IMaterial ambient, IRandomFactory randomFactory, 
             IHemispherecalSamplerFactory samplerFactory)
@@ -30,19 +31,45 @@ namespace StudyDiffuseShading.Model {
             this.randomFactory = randomFactory;
             this.sampler = samplerFactory.makeSampler();
             this.maxRadiance = maxRadiance;
+
+            this.DEFAULT_FILTER = (t) => false;
         }
-        
 
 
-        public Vector3D traceRay(Ray ray) {
-            double nearest;
+        public Vector3D traceFirstRay(Ray ray) {
             Triangle target;
             Collision collision;
-            if (!construction.findNearest(ray, double.MaxValue, out nearest, out target, out collision))
-                return ambient.shade(collision);
+            Vector3D result;
+            if (!findTarget(ray, DEFAULT_FILTER, out target, out collision, out result))
+                return result;
 
-            Vector3D result = target.matter.shade(collision);
+            result = target.matter.getLe(collision);
+            result += target.matter.shade(collision);
             return result;
+        }
+        public Vector3D traceRay(Ray ray) {
+            return traceRay(ray, DEFAULT_FILTER);
+        }
+        public Vector3D traceRay(Ray ray, Func<Triangle, bool> filter) {
+            Triangle target;
+            Collision collision;
+            Vector3D result;
+            if (!findTarget(ray, filter, out target, out collision, out result))
+                return result;
+
+            result = target.matter.shade(collision);
+            return result;
+        }
+
+        private bool findTarget(Ray ray, Func<Triangle, bool> filter, out Triangle target, out Collision collision, out Vector3D result) {
+            double nearest;
+            if (!construction.findNearest(ray, double.MaxValue, out nearest, out target, out collision)) {
+                 result = ambient.shade(collision);
+                 return false;
+            }
+
+            result = Constant.BLACK;
+            return !filter(target);
         }
     }
 }

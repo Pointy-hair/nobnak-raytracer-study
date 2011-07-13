@@ -50,6 +50,18 @@ namespace StudyDiffuseShading.Model.Primitive {
         }
 
         #region Overrides
+        public override bool Equals(object obj) {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+            var brother = (Triangle) obj;
+            if (GetHashCode() != brother.GetHashCode())
+                return false;
+
+            if (a.position != brother.a.position || b.position != brother.b.position || c.position != brother.c.position)
+                return false;
+
+            return true;
+        }
         public override int GetHashCode() {
             return cacheHashCode;
         }

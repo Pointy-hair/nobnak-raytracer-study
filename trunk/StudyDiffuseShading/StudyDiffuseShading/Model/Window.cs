@@ -10,6 +10,7 @@ namespace StudyDiffuseShading.Model {
 
         private int width;
         private int height;
+        private double ratio;
         private double scale;
         private double distance;
         private Matrix3D camera;
@@ -25,11 +26,11 @@ namespace StudyDiffuseShading.Model {
         public void setSize(int width, int height) {
             this.width = width;
             this.height = height;
+            this.ratio = (double)height / width;
         }
 
 
         public Ray getRay(double row, double column) {
-            var ratio = (double)height / width;
             var screenX = scale * (column / width - 0.5);
             var screenY = scale * ((height - row) / height - 0.5) * ratio;
 

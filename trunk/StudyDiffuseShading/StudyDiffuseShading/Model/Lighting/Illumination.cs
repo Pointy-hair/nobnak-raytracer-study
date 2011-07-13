@@ -9,7 +9,7 @@ using StudyDiffuseShading.Model.Util;
 using StudyDiffuseShading.Model.Sampler;
 
 namespace StudyDiffuseShading.Model.Lighting {
-    public class Illumination {
+    public class Illumination : IIllumination {
         private readonly List<Triangle> lights;
         private Construction primitives;
         private IRandomFactory randomFactory;
@@ -31,9 +31,9 @@ namespace StudyDiffuseShading.Model.Lighting {
             var random = randomFactory.makeRandom();
 
             var indexLight = (int)(lights.Count * random.NextDouble());
-            var triangle = lights[indexLight];
-            var sampleResult = triangleSampler.sample(triangle);
-            var normalLight = triangle.getNormal(sampleResult.u, sampleResult.v);
+            var light = lights[indexLight];
+            var sampleResult = triangleSampler.sample(light);
+            var normalLight = light.getNormal(sampleResult.u, sampleResult.v);
 
             var vecR = pointIlluminated - sampleResult.p;
             var r = vecR.Length;
@@ -44,12 +44,20 @@ namespace StudyDiffuseShading.Model.Lighting {
             Triangle hitTarget;
             Collision collision;
             var ray = new Ray(pointIlluminated, wi);
-            if (!primitives.findNearest(ray, r, out nearest, out hitTarget, out collision) || !triangle.Equals(hitTarget))
+            if (!primitives.findNearest(ray, r, out nearest, out hitTarget, out collision) || !light.Equals(hitTarget))
                 return Constant.BLACK;
             
-            var le = triangle.matter.shade(new Collision(sampleResult.p, wo, normalLight));
+            var le = light.matter.getLe(new Collision(sampleResult.p, wo, normalLight));
 
-            return lights.Count * le * Vector3D.DotProduct(normalLight, wo) * triangle.area / (r * r);
+            var coswo = Vector3D.DotProduct(normalLight, wo);
+            if (coswo <= Constant.EPSILON)
+                return Constant.BLACK;
+            return lights.Count * le * coswo * light.area / (r * r);
+        }
+
+
+        public bool hasLight(Triangle aLight) {
+            return lights.Contains(aLight);
         }
     }
 
