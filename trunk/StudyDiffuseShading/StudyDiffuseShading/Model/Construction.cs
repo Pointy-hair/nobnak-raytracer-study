@@ -28,16 +28,16 @@ namespace StudyDiffuseShading.Model {
             target = new Triangle();
 
             IntersectResult result = new IntersectResult();
+            var found = false;
             foreach (var primitive in primitives) {
                 IntersectResult tmpResult;
-                if (primitive.intersect(ray, out tmpResult) && tmpResult.t < nearest) {
+                if (primitive.intersect(ray, out tmpResult) && Constant.EPSILON < tmpResult.t && tmpResult.t < nearest) {
                     result = tmpResult;
                     nearest = tmpResult.t;
                     target = primitive;
+                    found = true;
                 }
             }
-
-            var found = Constant.EPSILON < nearest && nearest < farDistance;
 
             collision = new Collision();
             if (found) {
