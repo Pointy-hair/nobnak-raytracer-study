@@ -20,6 +20,7 @@ namespace StudyDiffuseShading.Model.Util {
             var leftMaterial = new Matte(diffuse, Constant.RED, primitives, lights, tracer, randomFactory, hemiSamplerFactory);
 
             // 下面
+#if true
             #region Floor
             //white
             //552.8 0.0   0.0   
@@ -37,6 +38,7 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(0.0, 0.0, -559.2),
                 matte));
             #endregion Floor
+#endif
 
             // 照明
             #region Light
@@ -61,6 +63,7 @@ namespace StudyDiffuseShading.Model.Util {
             #endregion Light
 
             // 上面
+#if true
             #region Ceiling
             //556.0 548.8   0.0
             //556.0 548.8 559.2
@@ -77,8 +80,10 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(0.0, 548.8, -559.2),
                 matte));
             #endregion Ceiling
+#endif
 
             // 背面
+#if true
             #region Backward
             //549.6   0.0 559.2
             //0.0   0.0 559.2
@@ -95,7 +100,9 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(0.0, 548.8, -559.2),
                 matte));
             #endregion Backward
+#endif
 
+#if true
             // 左面
             #region Left
             //0.0   0.0 559.2   
@@ -113,7 +120,9 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(0.0, 548.8, 0.0),
                 leftMaterial));
             #endregion Left
+#endif
 
+#if true
             // 右面
             #region Right
             //552.8   0.0   0.0
@@ -131,8 +140,10 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(556.0, 548.8, -559.2),
                 rightMaterial));
             #endregion Right
+#endif
 
             // 小さい箱
+#if true
             #region SmallBox
             //130.0 165.0  65.0
             // 82.0 165.0 225.0
@@ -209,8 +220,10 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(82.0, 165.0, -225.0),
                 matte));
             #endregion SmallBox
+#endif
 
             // 大きい箱
+#if true
             #region BigBox
             //423.0 330.0 247.0
             //265.0 330.0 296.0
@@ -286,8 +299,8 @@ namespace StudyDiffuseShading.Model.Util {
                 new Vector3D(423.0, 0.0, -247.0),
                 new Vector3D(423.0, 330.0, -247.0),
                 matte));
-
             #endregion BigBox
+#endif
         }
     }
 }

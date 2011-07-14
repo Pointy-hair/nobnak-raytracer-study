@@ -19,13 +19,13 @@ namespace StudyDiffuseShading.ViewModel {
         public static readonly DependencyProperty PixelBiasProperty = DependencyProperty.Register(
             "PixelBias", typeof(double), typeof(MainWindowVM));
         public static readonly DependencyProperty SampleNumberProperty = DependencyProperty.Register(
-            "SampleNumber", typeof(double), typeof(MainWindowVM), new PropertyMetadata(1.0, (o, e) => {
+            "SampleNumber", typeof(double), typeof(MainWindowVM), new PropertyMetadata(4.0, (o, e) => {
                 ((MainWindowVM)o).updatedSampleNumber();
             }));
         public static readonly DependencyProperty ImageWidthProperty = DependencyProperty.Register(
-            "ImageWidth", typeof(int), typeof(MainWindowVM), new PropertyMetadata(100));
+            "ImageWidth", typeof(int), typeof(MainWindowVM), new PropertyMetadata(200));
         public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
-            "ImageHeight", typeof(int), typeof(MainWindowVM), new PropertyMetadata(100));
+            "ImageHeight", typeof(int), typeof(MainWindowVM), new PropertyMetadata(200));
         #endregion DependencyRegister
 
         #region Fields
